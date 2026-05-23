@@ -1,0 +1,57 @@
+version: '3.9'
+
+# ─────────────────────────────────────────────────────────────────
+# Leópolis — Docker Compose
+#
+# Servicios disponibles:
+#   - flutter-ci   : Entorno de CI para tests y análisis
+#   - build-apk    : Compilar APK de release
+#   - backend      : API futura (Dart Shelf) — placeholder
+# ─────────────────────────────────────────────────────────────────
+
+services:
+
+  # Tests y análisis en contenedor (igual que CI de GitHub)
+  flutter-ci:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: ci
+    volumes:
+      - ..:/app
+      - flutter-pub-cache:/root/.pub-cache
+    command: sh -c "flutter analyze && flutter test --coverage"
+
+  # Compilar APK release sin tener el SDK en Windows
+  build-apk:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: build-apk
+    volumes:
+      - ..:/app
+      - flutter-pub-cache:/root/.pub-cache
+      - apk-output:/app/build/app/outputs
+    command: flutter build apk --release
+
+  # ─── Futuro backend (Dart Shelf / Node / FastAPI) ───
+  # Descomenta cuando añadas API al proyecto
+  #
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - PORT=8080
+  #     - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+  #   volumes:
+  #     - ./backend:/app
+  #   command: dart run bin/server.dart
+
+volumes:
+  flutter-pub-cache:
+    name: leopolis-pub-cache
+  apk-output:
+    name: leopolis-apk-output

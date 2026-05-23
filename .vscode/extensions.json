@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "dart-code.flutter",
+    "dart-code.dart-code",
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-spanish",
+    "github.vscode-pull-request-github",
+    "eamodio.gitlens",
+    "github.copilot",
+    "github.copilot-chat",
+    "ms-azuretools.vscode-docker",
+    "anthropic.claude-code",
+    "continue.continue",
+    "redhat.vscode-yaml",
+    "pkief.material-icon-theme",
+    "christian-kohler.path-intellisense"
+  ]
+}

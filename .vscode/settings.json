@@ -1,0 +1,34 @@
+{
+  "editor.fontSize": 14,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "Dart-Code.dart-code",
+  "editor.rulers": [80, 120],
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "dart.lineLength": 120,
+  "dart.previewFlutterUiGuides": true,
+  "dart.previewFlutterUiGuidesCustomTracking": true,
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.dart_tool": true
+  },
+  "files.watcherExclude": {
+    "**/build/**": true,
+    "**/.dart_tool/**": true
+  },
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "errorLens.enabledDiagnosticLevels": ["error", "warning", "info"],
+  "workbench.iconTheme": "material-icon-theme",
+  "terminal.integrated.defaultProfile.windows": "PowerShell"
+}

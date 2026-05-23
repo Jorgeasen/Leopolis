@@ -1,0 +1,50 @@
+name: 🐛 Bug Report
+description: Reportar un problema en Leópolis
+title: "[BUG] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar un bug. El agente de IA lo analizará automáticamente en breve.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Plataforma
+      options:
+        - Windows 11
+        - Android (tablet)
+        - iPad (iOS)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del problema
+      placeholder: ¿Qué pasó exactamente?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      placeholder: |
+        1. Abrir la app
+        2. Ir a Las Letras
+        3. Tocar la letra A
+        4. ...
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+      placeholder: ¿Qué debería haber pasado?
+
+  - type: input
+    id: version
+    attributes:
+      label: Versión de la app
+      placeholder: "1.0.0"

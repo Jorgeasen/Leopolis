@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"D:\\\\source\\\\repos\\\\Leopolis\" -Force | Select-Object Name, @{Name=\"Type\"; Expression={if\\($_.PSIsContainer\\){\"Dir\"}else{\"File\"}}} | Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell($env:PATH -split \";\" | Where-Object { $_ -match \"flutter\" })",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\vswhere.exe\" -all -format json 2>$null | ConvertFrom-Json | Select-Object instanceId, displayName, installationPath, installationVersion, isComplete)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\vswhere.exe\" -all -format json)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\vswhere.exe\" -all -prerelease -format json | ConvertFrom-Json | Select-Object instanceId, displayName, installationPath, installationVersion, isComplete, productId)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\vswhere.exe\" -all -prerelease -format json)",
+      "Bash(flutter doctor *)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\setup.exe\" modify --installPath \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\18\\\\BuildTools\" --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --passive --norestart 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\vswhere.exe\" -all -prerelease -format json -path \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\18\\\\BuildTools\")",
+      "PowerShell(Start-Process -FilePath \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\setup.exe\" -ArgumentList 'modify --installPath \"D:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\" --add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive --norestart' -Wait -PassThru | Select-Object ExitCode)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Start-Process -FilePath \"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\Installer\\\\setup.exe\" -ArgumentList 'modify --installPath \"D:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\" --add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive --norestart' -Verb RunAs)",
+      "PowerShell($env:ANDROID_HOME; $env:ANDROID_SDK_ROOT; [System.Environment]::GetEnvironmentVariable\\(\"ANDROID_HOME\", \"User\"\\); [System.Environment]::GetEnvironmentVariable\\(\"ANDROID_SDK_ROOT\", \"User\"\\))",
+      "PowerShell(flutter doctor *)",
+      "Bash(flutter analyze *)",
+      "Bash(flutter pub *)",
+      "Bash(start ms-settings:developers *)",
+      "Bash(winget install *)",
+      "Bash(mkdir -p \"D:/source/repos/Leopolis/assets/fonts\")",
+      "Bash(curl -L \"https://github.com/google/fonts/raw/main/ofl/fredoka/Fredoka%5Bwdth%2Cwght%5D.ttf\" -o \"D:/source/repos/Leopolis/assets/fonts/Fredoka-Regular.ttf\")",
+      "PowerShell(Copy-Item *)"
+    ]
+  }
+}

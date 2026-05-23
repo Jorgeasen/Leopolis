@@ -1,0 +1,60 @@
+name: leopolis
+description: "Leópolis - La ciudad donde Leo aprende a leer y escribir 🦁"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Navegación
+  go_router: ^14.0.0
+
+  # Estado
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Voz y sonido
+  flutter_tts: ^4.0.2
+  audioplayers: ^6.0.0
+
+  # Animaciones
+  lottie: ^3.1.2
+
+  # Fuentes
+  google_fonts: ^6.2.1
+
+  # Persistencia local
+  shared_preferences: ^2.2.3
+
+  # Assets e iconos
+  cupertino_icons: ^1.0.6
+  flutter_svg: ^2.0.10+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
+  riverpod_generator: ^2.4.3
+  custom_lint: ^0.7.6
+  riverpod_lint: ^2.4.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/audio/
+    - assets/animations/
+    - assets/fonts/
+
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-Regular.ttf
+        - asset: assets/fonts/Fredoka-Bold.ttf
+          weight: 700
