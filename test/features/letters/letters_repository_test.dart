@@ -29,6 +29,22 @@ void main() {
       expect(LettersRepository.getByLetter('1'), isNull);
     });
 
+    test('getByLetter returns Ñ entry', () {
+      final result = LettersRepository.getByLetter('Ñ');
+      expect(result, isNotNull);
+      expect(result!.letra, 'Ñ');
+      expect(result.palabraEjemplo, isNotEmpty);
+    });
+
+    test('each letter has letra, palabraEjemplo, emoji and colorDestacado', () {
+      for (final letter in LettersRepository.getAll()) {
+        expect(letter.letra, isNotEmpty);
+        expect(letter.palabraEjemplo, isNotEmpty);
+        // emoji is optional but colorDestacado always has a value
+        expect(letter.colorDestacado, isNotNull);
+      }
+    });
+
     test('getNext returns B after A', () {
       final next = LettersRepository.getNext('A');
       expect(next?.letra, 'B');

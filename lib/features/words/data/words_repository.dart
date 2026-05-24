@@ -211,4 +211,14 @@ class WordsRepository {
       ..shuffle(Random());
     return others.take(count).toList();
   }
+
+  static List<String> getRandomSyllableDistractors(String syllable, int count) {
+    final all = _words
+        .expand((w) => w.silabas)
+        .toSet()
+        .where((s) => s != syllable)
+        .toList()
+      ..shuffle(Random());
+    return all.take(count).toList();
+  }
 }
