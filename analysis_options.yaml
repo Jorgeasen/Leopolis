@@ -1,11 +1,10 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  plugins:
-    - custom_lint
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    - "lib/firebase_options.dart"
   errors:
     invalid_annotation_target: ignore
 
