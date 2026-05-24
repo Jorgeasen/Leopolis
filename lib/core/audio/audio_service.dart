@@ -5,8 +5,12 @@ class AudioService {
   AudioService._();
 
   final FlutterTts _tts = FlutterTts();
+  bool _soundEnabled = true;
+
+  void setSoundEnabled(bool enabled) => _soundEnabled = enabled;
 
   Future<void> playSuccess() async {
+    if (!_soundEnabled) return;
     try {
       await _tts.setLanguage('es-ES');
       await _tts.setSpeechRate(0.6);
@@ -16,6 +20,7 @@ class AudioService {
   }
 
   Future<void> playError() async {
+    if (!_soundEnabled) return;
     try {
       await _tts.setLanguage('es-ES');
       await _tts.setSpeechRate(0.5);
