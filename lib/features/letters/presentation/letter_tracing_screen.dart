@@ -1,8 +1,8 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/audio/audio_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
@@ -23,7 +23,6 @@ class LetterTracingScreen extends ConsumerStatefulWidget {
 class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
     with TickerProviderStateMixin {
   final _canvasKey = GlobalKey<TracingCanvasState>();
-  final _audio = AudioPlayer();
 
   late final AnimationController _starCtrl;
   late final Animation<double> _starScale;
@@ -68,14 +67,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
   void dispose() {
     _starCtrl.dispose();
     _shakeCtrl.dispose();
-    _audio.dispose();
     super.dispose();
-  }
-
-  Future<void> _playAudio(String asset) async {
-    try {
-      await _audio.play(AssetSource(asset));
-    } catch (_) {}
   }
 
   Future<void> _onSuccess() async {
@@ -84,7 +76,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
       _message = '¡Muy bien! ⭐';
     });
     _starCtrl.forward(from: 0);
-    await _playAudio('audio/fanfare.mp3');
+    await AudioService.instance.playSuccess();
     await ref
         .read(lettersProgressProvider.notifier)
         .markCompleted(widget.letter);
@@ -95,7 +87,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
   void _onFailure() {
     setState(() => _message = '¡Inténtalo otra vez! 🦁');
     _shakeCtrl.forward(from: 0);
-    _playAudio('audio/boing.mp3');
+    AudioService.instance.playError();
   }
 
   void _reset() {
