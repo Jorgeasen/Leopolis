@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
+import '../data/words_progress_provider.dart';
 
-class WordsScreen extends StatelessWidget {
+class WordsScreen extends ConsumerWidget {
   const WordsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final progressAsync = ref.watch(wordsProgressProvider);
+    final wordMatchCount = progressAsync.valueOrNull?.wordMatchCompleted ?? 0;
+    final syllableCount = progressAsync.valueOrNull?.syllableCompleted ?? 0;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.wordsColor,
@@ -36,7 +43,9 @@ class WordsScreen extends StatelessWidget {
             _ExerciseCard(
               emoji: '🖼️',
               titulo: 'Adivina la Palabra',
-              subtitulo: 'Ve la imagen y elige la palabra correcta',
+              subtitulo: wordMatchCount > 0
+                  ? '$wordMatchCount aciertos ⭐'
+                  : 'Ve la imagen y elige la palabra correcta',
               color: AppTheme.wordsColor,
               onTap: () => context.push('/words/match'),
             ),
@@ -44,7 +53,9 @@ class WordsScreen extends StatelessWidget {
             _ExerciseCard(
               emoji: '🔤',
               titulo: 'Completa la Sílaba',
-              subtitulo: 'Encuentra la sílaba que falta en la palabra',
+              subtitulo: syllableCount > 0
+                  ? '$syllableCount aciertos ⭐'
+                  : 'Encuentra la sílaba que falta en la palabra',
               color: AppTheme.wordsColor.withValues(alpha: 0.8),
               onTap: () => context.push('/words/syllable'),
             ),
@@ -116,8 +127,11 @@ class _ExerciseCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded,
-                color: Colors.white, size: 36),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white,
+              size: 36,
+            ),
           ],
         ),
       ),

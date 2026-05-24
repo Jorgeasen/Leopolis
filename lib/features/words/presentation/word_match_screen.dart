@@ -2,22 +2,26 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
+import '../../rewards/data/rewards_provider.dart';
 import '../data/word_data.dart';
+import '../data/words_progress_provider.dart';
 import '../data/words_repository.dart';
 
-class WordMatchScreen extends StatefulWidget {
+class WordMatchScreen extends ConsumerStatefulWidget {
   const WordMatchScreen({super.key});
 
   @override
-  State<WordMatchScreen> createState() => _WordMatchScreenState();
+  ConsumerState<WordMatchScreen> createState() => _WordMatchScreenState();
 }
 
-class _WordMatchScreenState extends State<WordMatchScreen>
+class _WordMatchScreenState extends ConsumerState<WordMatchScreen>
     with SingleTickerProviderStateMixin {
   late WordData _currentWord;
   late List<WordData> _options;
@@ -68,8 +72,12 @@ class _WordMatchScreenState extends State<WordMatchScreen>
         _blocked = true;
         _celebrating = true;
         _score++;
-        SessionTracker.instance.recordStars(1);
       });
+      SessionTracker.instance.recordStars(1);
+      ref
+          .read(rewardsProvider.notifier)
+          .addStars(AppConstants.starsPerExercise);
+      ref.read(wordsProgressProvider.notifier).addWordMatchScore();
       _playSound('audio/fanfare.mp3');
       await Future.delayed(const Duration(milliseconds: 1500));
       if (mounted) _loadNewWord();
