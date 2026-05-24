@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../features/settings/data/app_settings.dart';
 import '../../features/words/data/word_progress_data.dart';
 import 'collections/letter_progress.dart';
 import 'collections/rewards_data.dart';
@@ -23,6 +24,7 @@ class IsarService {
     final dir = await getApplicationDocumentsDirectory();
     _db = await Isar.open(
       [
+        AppSettingsSchema,
         LetterProgressSchema,
         RewardsDataSchema,
         SessionDataSchema,

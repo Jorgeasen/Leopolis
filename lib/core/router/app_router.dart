@@ -16,6 +16,7 @@ import '../../features/games/presentation/word_scramble_game.dart';
 import '../../features/auth/presentation/parent_dashboard_screen.dart';
 import '../../features/auth/presentation/parent_login_screen.dart';
 import '../../features/rewards/presentation/rewards_screen.dart';
+import '../../features/settings/presentation/settings_screen.dart';
 import '../constants/app_constants.dart';
 
 part 'app_router.g.dart';
@@ -79,6 +80,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppConstants.routeRewards,
         builder: (context, state) => const RewardsScreen(),
+      ),
+      GoRoute(
+        path: AppConstants.routeSettings,
+        builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
         path: '/parent-login',

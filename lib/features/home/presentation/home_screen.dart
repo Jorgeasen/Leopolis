@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../settings/data/settings_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsAsync = ref.watch(settingsProvider);
+    final childName = settingsAsync.valueOrNull?.childName ?? 'Leo';
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -18,15 +24,29 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              const SizedBox(height: 24),
-              // Header con título y mascota
-              _buildHeader(context),
-              const SizedBox(height: 32),
-              // Grid de módulos
-              Expanded(child: _buildModuleGrid(context)),
-              const SizedBox(height: 16),
+              Column(
+                children: [
+                  const SizedBox(height: 24),
+                  _buildHeader(context, childName),
+                  const SizedBox(height: 32),
+                  Expanded(child: _buildModuleGrid(context)),
+                  const SizedBox(height: 16),
+                ],
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.settings_rounded,
+                    size: 32,
+                    color: AppTheme.textDark,
+                  ),
+                  onPressed: () => context.go(AppConstants.routeSettings),
+                ),
+              ),
             ],
           ),
         ),
@@ -34,10 +54,10 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, String childName) {
     return Column(
       children: [
-        Text('¡Hola, Leo! 🦁',
+        Text('¡Hola, $childName! 🦁',
             style: Theme.of(context).textTheme.displayMedium),
         const SizedBox(height: 8),
         Text(
@@ -60,15 +80,17 @@ class HomeScreen extends StatelessWidget {
         route: AppConstants.routeLetters,
       ),
       const _ModuleCard(
-          title: 'Las Palabras',
-          emoji: '📝',
-          color: AppTheme.wordsColor,
-          route: AppConstants.routeWords),
+        title: 'Las Palabras',
+        emoji: '📝',
+        color: AppTheme.wordsColor,
+        route: AppConstants.routeWords,
+      ),
       const _ModuleCard(
-          title: 'Juegos',
-          emoji: '🎮',
-          color: AppTheme.gamesColor,
-          route: AppConstants.routeGames),
+        title: 'Juegos',
+        emoji: '🎮',
+        color: AppTheme.gamesColor,
+        route: AppConstants.routeGames,
+      ),
       const _ModuleCard(
         title: 'Mis Premios',
         emoji: '⭐',
@@ -101,9 +123,10 @@ class HomeScreen extends StatelessWidget {
             Text(
               module.title,
               style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold),
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -113,11 +136,12 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _ModuleCard {
-  const _ModuleCard(
-      {required this.title,
-      required this.emoji,
-      required this.color,
-      required this.route});
+  const _ModuleCard({
+    required this.title,
+    required this.emoji,
+    required this.color,
+    required this.route,
+  });
 
   final String title;
   final String emoji;

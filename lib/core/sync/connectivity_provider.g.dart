@@ -7,7 +7,7 @@ part of 'connectivity_provider.dart';
 // **************************************************************************
 
 String _$connectivityStreamHash() =>
-    r'c1cf81e187c34048bc8d9fd2184c911c150b35c6';
+    r'abf6ab562edecc2a02195c6bfef7a467099df95c';
 
 /// See also [connectivityStream].
 @ProviderFor(connectivityStream)
