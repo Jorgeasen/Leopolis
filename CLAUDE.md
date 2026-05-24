@@ -19,7 +19,7 @@ This file provides guidance to Claude Code when working in this repository.
 # Instalar dependencias
 flutter pub get
 
-# Generar código (OBLIGATORIO tras tocar app_router.dart o providers Riverpod)
+# Generar código (OBLIGATORIO tras tocar app_router.dart, providers Riverpod o colecciones Isar)
 dart run build_runner build --delete-conflicting-outputs
 
 # Ejecutar en Windows (target principal de desarrollo)
@@ -54,13 +54,33 @@ Feature-based bajo `lib/`:
 - `core/`
   - `router/app_router.dart` — go_router con anotación Riverpod; `app_router.g.dart` es generado
   - `theme/app_theme.dart` — Material3, paleta por módulo
-  - `constants/app_constants.dart` — rutas, claves SharedPreferences, reglas de gamificación
+  - `constants/app_constants.dart` — rutas, colecciones Isar, reglas de gamificación
+  - `database/isar_service.dart` — singleton que abre/cierra la instancia Isar
+  - `sync/sync_service.dart` — puente Isar ↔ Firestore (offline-first)
 - `features/` — home/, letters/, words/, games/, rewards/ (cada uno con presentation/ y data/)
 - `shared/` — widgets reutilizables (LeoButton) y modelos
 
 **Estado**: Riverpod (infraestructura lista, uso mínimo en screens aún).
 **Navegación**: go_router centralizado. Tras modificar app_router.dart → re-ejecutar build_runner.
 **Audio/TTS**: flutter_tts configurado es-ES (velocidad 0.4, tono 1.1). audioplayers para efectos.
+
+### Stack de persistencia
+
+| Capa      | Tecnología        | Para qué                          |
+|-----------|-------------------|-----------------------------------|
+| Estado UI | Riverpod          | Reactividad, providers            |
+| Local     | Isar              | Base de datos offline, rapidez    |
+| Nube      | Firebase Firestore| Sync entre dispositivos           |
+| Auth      | Firebase Auth     | Login de papá/mamá (Google)       |
+| Sync      | SyncService propio| Puente Isar ↔ Firestore           |
+
+**Regla de oro**: Isar es la fuente de verdad local. La app funciona siempre sin conexión. Firestore sincroniza en background. En conflicto: gana el progreso mayor (Leo nunca pierde estrellas).
+
+**Colecciones Isar**:
+- `LetterProgress` — letra, isCompleted, completedAt, tracingAttempts
+- `RewardsData` — totalStars, currentLevel, unlockedBadges[]
+- `WordProgress` — word, isCompleted, matchAttempts (v1.1+)
+- `SessionData` — startTime, endTime, starsEarned (v1.1+)
 
 ---
 
@@ -72,7 +92,7 @@ Feature-based bajo `lib/`:
 - Colores del tema: Primary `#FF8C00` naranja, Secondary `#4CAF50` verde, Background `#FFF8E1` crema
 - Colores por módulo: Letters=Azul `#2196F3`, Words=Morado `#9C27B0`, Games=Rojo-naranja `#FF5722`, Rewards=Dorado `#FFD700`
 - Linting: return types, const constructors, single quotes. Excluir `*.g.dart`, `*.freezed.dart`
-- SharedPreferences keys: usar constantes de `app_constants.dart`, nunca strings literales
+- **Persistencia**: usar siempre Isar vía `IsarService`. Nunca SharedPreferences directo. Nunca strings literales para nombres de colección.
 - Assets: images/ audio/ animations/ fonts/ — todas las carpetas deben existir aunque estén vacías
 
 ---
@@ -202,12 +222,12 @@ Estas reglas son **no negociables** al diseñar cualquier pantalla:
 
 ---
 
-### 🔵 v2.0 — Backend + Perfil en la nube (futuro)
+### 🔵 v2.0 — Sync en la nube + Dashboard de padres
 
-- [ ] API en Dart Shelf (o Node) para sincronizar progreso entre dispositivos
-- [ ] Autenticación con Google Sign-In (perfil de papá/mamá, no de Leo)
+- [ ] Firebase Auth + Google Sign-In (perfil de papá/mamá, no de Leo)
+- [ ] SyncService: sincronizar Isar ↔ Firestore en background
 - [ ] Dashboard para padres: tiempo de uso, letras dominadas, progreso semanal
-- [ ] Docker ya preparado en `docker/` para este backend
+- [ ] Reglas de seguridad Firestore: cada familia solo accede a sus datos
 
 ---
 
@@ -245,9 +265,20 @@ Antes de poder ejecutar por primera vez:
 # 1. Crear carpetas de assets (Flutter las necesita aunque estén vacías)
 mkdir assets/images assets/audio assets/animations assets/fonts
 
-# 2. Generar código del router y riverpod
+# 2. Instalar dependencias (incluye Isar + Firebase una vez añadidos al pubspec)
+flutter pub get
+
+# 3. Generar código (router, Riverpod, colecciones Isar)
 dart run build_runner build --delete-conflicting-outputs
 
-# 3. Ejecutar
+# 4. Ejecutar
 flutter run -d windows
 ```
+
+### Setup Firebase (manual, una sola vez)
+1. Crear proyecto en https://console.firebase.google.com
+2. Añadir app Android (package: `com.jorgeasen.leopolis`) y descargar `google-services.json` → `android/app/`
+3. Añadir app iOS y descargar `GoogleService-Info.plist` → `ios/Runner/`
+4. Añadir app Web (para CI headless) con configuración dummy
+5. Activar Firestore y Authentication (Google Sign-In) en la consola
+6. `google-services.json` NO es un secret — puede commitearse (la seguridad está en Firestore Rules)
