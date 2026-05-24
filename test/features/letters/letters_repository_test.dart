@@ -21,7 +21,8 @@ void main() {
     });
 
     test('getByLetter is case-insensitive', () {
-      expect(LettersRepository.getByLetter('a'), LettersRepository.getByLetter('A'));
+      expect(LettersRepository.getByLetter('a'),
+          LettersRepository.getByLetter('A'));
     });
 
     test('getByLetter returns null for unknown letter', () {
@@ -51,14 +52,18 @@ void main() {
 
   group('LetterData', () {
     test('equality based on letra', () {
-      const a1 = LetterData(letra: 'A', palabraEjemplo: 'Árbol', imagenAsset: 'a.png');
-      const a2 = LetterData(letra: 'A', palabraEjemplo: 'Avión', imagenAsset: 'b.png');
+      const a1 =
+          LetterData(letra: 'A', palabraEjemplo: 'Árbol', imagenAsset: 'a.png');
+      const a2 =
+          LetterData(letra: 'A', palabraEjemplo: 'Avión', imagenAsset: 'b.png');
       expect(a1, equals(a2));
     });
 
     test('different letras are not equal', () {
-      const a = LetterData(letra: 'A', palabraEjemplo: 'Árbol', imagenAsset: 'a.png');
-      const b = LetterData(letra: 'B', palabraEjemplo: 'Barco', imagenAsset: 'b.png');
+      const a =
+          LetterData(letra: 'A', palabraEjemplo: 'Árbol', imagenAsset: 'a.png');
+      const b =
+          LetterData(letra: 'B', palabraEjemplo: 'Barco', imagenAsset: 'b.png');
       expect(a, isNot(equals(b)));
     });
   });

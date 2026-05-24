@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1060492570258",
+    "project_id": "leopolis-060320",
+    "storage_bucket": "leopolis-060320.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060492570258:android:62b3ccc47273bc3ae0404b",
+        "android_client_info": {
+          "package_name": "com.jorgeasen.leopolis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060492570258-fsaec0qsuf7kqf0f31agleel2a7tm866.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jorgeasen.leopolis",
+            "certificate_hash": "eb12110e9660c206f6c8aaad75e6cd098c09180f"
+          }
+        },
+        {
+          "client_id": "1060492570258-cpq6iaur4jbu424oak1jfsid2v4kvi7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUCmd9ZDjP62NT-l7oi1j2c4DOKGxrhNY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060492570258-cpq6iaur4jbu424oak1jfsid2v4kvi7a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1060492570258-cpnfevg53tsgcqh7v5gopd5oofdkqtie.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jorgeasen.leopolis"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

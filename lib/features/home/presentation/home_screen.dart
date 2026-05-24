@@ -37,11 +37,15 @@ class HomeScreen extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Column(
       children: [
-        Text('¡Hola, Leo! 🦁', style: Theme.of(context).textTheme.displayMedium),
+        Text('¡Hola, Leo! 🦁',
+            style: Theme.of(context).textTheme.displayMedium),
         const SizedBox(height: 8),
         Text(
           '¿Qué quieres aprender hoy?',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textDark.withValues(alpha: 0.7)),
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(color: AppTheme.textDark.withValues(alpha: 0.7)),
         ),
       ],
     );
@@ -55,8 +59,16 @@ class HomeScreen extends StatelessWidget {
         color: AppTheme.lettersColor,
         route: AppConstants.routeLetters,
       ),
-      const _ModuleCard(title: 'Las Palabras', emoji: '📝', color: AppTheme.wordsColor, route: AppConstants.routeWords),
-      const _ModuleCard(title: 'Juegos', emoji: '🎮', color: AppTheme.gamesColor, route: AppConstants.routeGames),
+      const _ModuleCard(
+          title: 'Las Palabras',
+          emoji: '📝',
+          color: AppTheme.wordsColor,
+          route: AppConstants.routeWords),
+      const _ModuleCard(
+          title: 'Juegos',
+          emoji: '🎮',
+          color: AppTheme.gamesColor,
+          route: AppConstants.routeGames),
       const _ModuleCard(
         title: 'Mis Premios',
         emoji: '⭐',
@@ -88,7 +100,10 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               module.title,
-              style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -98,7 +113,11 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _ModuleCard {
-  const _ModuleCard({required this.title, required this.emoji, required this.color, required this.route});
+  const _ModuleCard(
+      {required this.title,
+      required this.emoji,
+      required this.color,
+      required this.route});
 
   final String title;
   final String emoji;
