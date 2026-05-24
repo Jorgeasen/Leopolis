@@ -11,6 +11,7 @@ import '../../features/words/presentation/words_screen.dart';
 import '../../features/games/presentation/falling_letters_game.dart';
 import '../../features/games/presentation/games_screen.dart';
 import '../../features/games/presentation/missing_letter_game.dart';
+import '../../features/games/presentation/word_scramble_game.dart';
 import '../../features/rewards/presentation/rewards_screen.dart';
 import '../constants/app_constants.dart';
 
@@ -60,6 +61,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/games/missing-letter',
         builder: (context, state) => const MissingLetterGame(),
+      ),
+      GoRoute(
+        path: '/games/word-scramble',
+        builder: (context, state) => const WordScrambleGame(),
       ),
       GoRoute(
         path: AppConstants.routeRewards,
