@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/letters/presentation/letter_detail_screen.dart';
+import '../../features/letters/presentation/letter_tracing_screen.dart';
 import '../../features/letters/presentation/letters_screen.dart';
 import '../../features/words/presentation/syllable_screen.dart';
 import '../../features/words/presentation/word_match_screen.dart';
@@ -36,6 +37,13 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final letter = state.pathParameters['letter'] ?? 'A';
           return LetterDetailScreen(letter: letter);
+        },
+      ),
+      GoRoute(
+        path: '/letters/:letter/tracing',
+        builder: (context, state) {
+          final letter = state.pathParameters['letter'] ?? 'A';
+          return LetterTracingScreen(letter: letter);
         },
       ),
       GoRoute(
