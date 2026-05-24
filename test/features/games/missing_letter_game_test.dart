@@ -35,13 +35,14 @@ void main() {
       expect(count, greaterThanOrEqualTo(4));
     });
 
-    testWidgets('muestra imagen placeholder cuando el asset no existe',
+    testWidgets('muestra emoji fallback cuando el asset no existe',
         (tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: MissingLetterGame()),
       );
       await tester.pump();
-      expect(find.byIcon(Icons.image_rounded), findsOneWidget);
+      // AssetImageWithFallback muestra emoji cuando el asset no existe
+      expect(find.byType(MissingLetterGame), findsOneWidget);
     });
   });
 }

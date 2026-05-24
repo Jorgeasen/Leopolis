@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/audio/audio_service.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../../../shared/widgets/leo_mascot.dart';
 import '../../words/data/words_repository.dart';
 
@@ -27,6 +28,7 @@ class _WordScrambleGameState extends State<WordScrambleGame>
 
   late String _currentWord;
   late String _imagenAsset;
+  late String _emoji;
   late List<String?> _slots;
   late List<String?> _available;
   int? _shakingSlot;
@@ -76,6 +78,7 @@ class _WordScrambleGameState extends State<WordScrambleGame>
     setState(() {
       _currentWord = upper;
       _imagenAsset = data.imagenAsset;
+      _emoji = data.emoji;
       _slots = List.filled(upper.length, null);
       _available = shuffled;
       _shakingSlot = null;
@@ -196,7 +199,8 @@ class _WordScrambleGameState extends State<WordScrambleGame>
                 children: [
                   Expanded(
                     flex: 2,
-                    child: _ImageDisplay(imagenAsset: _imagenAsset),
+                    child:
+                        _ImageDisplay(imagenAsset: _imagenAsset, emoji: _emoji),
                   ),
                   const SizedBox(height: 24),
                   _SlotsRow(
@@ -226,8 +230,9 @@ class _WordScrambleGameState extends State<WordScrambleGame>
 // ── Sub-widgets ──────────────────────────────────────────────────────────────
 
 class _ImageDisplay extends StatelessWidget {
-  const _ImageDisplay({required this.imagenAsset});
+  const _ImageDisplay({required this.imagenAsset, required this.emoji});
   final String imagenAsset;
+  final String emoji;
 
   @override
   Widget build(BuildContext context) {
@@ -237,14 +242,10 @@ class _ImageDisplay extends StatelessWidget {
         color: AppTheme.gamesColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Image.asset(
-        imagenAsset,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => const Icon(
-          Icons.image_rounded,
-          size: 80,
-          color: AppTheme.gamesColor,
-        ),
+      child: AssetImageWithFallback(
+        assetPath: imagenAsset,
+        fallbackEmoji: emoji.isEmpty ? '🖼️' : emoji,
+        emojiFontSize: 100,
       ),
     );
   }
