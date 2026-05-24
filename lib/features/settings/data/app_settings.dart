@@ -9,4 +9,5 @@ class AppSettings {
   double ttsVolume = 0.8;
   double ttsRate = 0.4;
   bool soundEnabled = true;
+  bool hasCompletedOnboarding = false;
 }

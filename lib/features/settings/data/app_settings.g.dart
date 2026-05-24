@@ -22,18 +22,23 @@ const AppSettingsSchema = CollectionSchema(
       name: r'childName',
       type: IsarType.string,
     ),
-    r'soundEnabled': PropertySchema(
+    r'hasCompletedOnboarding': PropertySchema(
       id: 1,
+      name: r'hasCompletedOnboarding',
+      type: IsarType.bool,
+    ),
+    r'soundEnabled': PropertySchema(
+      id: 2,
       name: r'soundEnabled',
       type: IsarType.bool,
     ),
     r'ttsRate': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'ttsRate',
       type: IsarType.double,
     ),
     r'ttsVolume': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'ttsVolume',
       type: IsarType.double,
     )
@@ -69,9 +74,10 @@ void _appSettingsSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.childName);
-  writer.writeBool(offsets[1], object.soundEnabled);
-  writer.writeDouble(offsets[2], object.ttsRate);
-  writer.writeDouble(offsets[3], object.ttsVolume);
+  writer.writeBool(offsets[1], object.hasCompletedOnboarding);
+  writer.writeBool(offsets[2], object.soundEnabled);
+  writer.writeDouble(offsets[3], object.ttsRate);
+  writer.writeDouble(offsets[4], object.ttsVolume);
 }
 
 AppSettings _appSettingsDeserialize(
@@ -82,10 +88,11 @@ AppSettings _appSettingsDeserialize(
 ) {
   final object = AppSettings();
   object.childName = reader.readString(offsets[0]);
+  object.hasCompletedOnboarding = reader.readBool(offsets[1]);
   object.id = id;
-  object.soundEnabled = reader.readBool(offsets[1]);
-  object.ttsRate = reader.readDouble(offsets[2]);
-  object.ttsVolume = reader.readDouble(offsets[3]);
+  object.soundEnabled = reader.readBool(offsets[2]);
+  object.ttsRate = reader.readDouble(offsets[3]);
+  object.ttsVolume = reader.readDouble(offsets[4]);
   return object;
 }
 
@@ -101,8 +108,10 @@ P _appSettingsDeserializeProp<P>(
     case 1:
       return (reader.readBool(offset)) as P;
     case 2:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readDouble(offset)) as P;
+    case 4:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -338,6 +347,16 @@ extension AppSettingsQueryFilter
     });
   }
 
+  QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition>
+      hasCompletedOnboardingEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hasCompletedOnboarding',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<AppSettings, AppSettings, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -551,6 +570,20 @@ extension AppSettingsQuerySortBy
     });
   }
 
+  QueryBuilder<AppSettings, AppSettings, QAfterSortBy>
+      sortByHasCompletedOnboarding() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCompletedOnboarding', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppSettings, AppSettings, QAfterSortBy>
+      sortByHasCompletedOnboardingDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCompletedOnboarding', Sort.desc);
+    });
+  }
+
   QueryBuilder<AppSettings, AppSettings, QAfterSortBy> sortBySoundEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'soundEnabled', Sort.asc);
@@ -600,6 +633,20 @@ extension AppSettingsQuerySortThenBy
   QueryBuilder<AppSettings, AppSettings, QAfterSortBy> thenByChildNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'childName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppSettings, AppSettings, QAfterSortBy>
+      thenByHasCompletedOnboarding() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCompletedOnboarding', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppSettings, AppSettings, QAfterSortBy>
+      thenByHasCompletedOnboardingDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasCompletedOnboarding', Sort.desc);
     });
   }
 
@@ -662,6 +709,13 @@ extension AppSettingsQueryWhereDistinct
     });
   }
 
+  QueryBuilder<AppSettings, AppSettings, QDistinct>
+      distinctByHasCompletedOnboarding() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hasCompletedOnboarding');
+    });
+  }
+
   QueryBuilder<AppSettings, AppSettings, QDistinct> distinctBySoundEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'soundEnabled');
@@ -692,6 +746,13 @@ extension AppSettingsQueryProperty
   QueryBuilder<AppSettings, String, QQueryOperations> childNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'childName');
+    });
+  }
+
+  QueryBuilder<AppSettings, bool, QQueryOperations>
+      hasCompletedOnboardingProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hasCompletedOnboarding');
     });
   }
 
