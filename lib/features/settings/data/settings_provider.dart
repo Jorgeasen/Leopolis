@@ -6,6 +6,8 @@ import '../../../core/database/collections/letter_progress.dart';
 import '../../../core/database/collections/rewards_data.dart';
 import '../../../core/database/collections/session_data.dart';
 import '../../../core/database/isar_service.dart';
+import '../../letters/data/letters_progress_provider.dart';
+import '../../rewards/data/rewards_provider.dart';
 import '../../words/data/word_progress_data.dart';
 import 'app_settings.dart';
 
@@ -68,6 +70,9 @@ class SettingsNotifier extends AsyncNotifier<AppSettings> {
       await db.wordProgressDatas.clear();
       await db.sessionDatas.clear();
     });
+    // Forzar recarga de los providers para que la UI refleje el reset
+    ref.invalidate(lettersProgressProvider);
+    ref.invalidate(rewardsProvider);
   }
 }
 

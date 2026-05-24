@@ -118,7 +118,7 @@ class _SyllableScreenState extends ConsumerState<SyllableScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('¡Inténtalo otra vez! 🦁'),
+            content: Text('¡No! 🦁'),
             duration: Duration(milliseconds: 700),
             behavior: SnackBarBehavior.floating,
           ),

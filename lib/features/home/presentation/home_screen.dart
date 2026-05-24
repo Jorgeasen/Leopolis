@@ -102,14 +102,22 @@ class HomeScreen extends ConsumerWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.15,
-          children: modules.map((m) => _buildModuleCard(context, m)).toList(),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final cardWidth = (constraints.maxWidth - 16) / 2;
+            // Cap card height so they always fit on screen (140–200px)
+            final cardHeight = cardWidth.clamp(140.0, 200.0);
+            return GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: cardWidth / cardHeight,
+              children:
+                  modules.map((m) => _buildModuleCard(context, m)).toList(),
+            );
+          },
         ),
       ),
     );

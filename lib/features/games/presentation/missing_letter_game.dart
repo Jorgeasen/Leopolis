@@ -129,7 +129,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('¡Inténtalo otra vez! 🦁'),
+            content: Text('¡No! 🦁'),
             duration: Duration(milliseconds: 700),
             behavior: SnackBarBehavior.floating,
           ),
