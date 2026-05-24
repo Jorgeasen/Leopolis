@@ -8,6 +8,7 @@ import '../../features/letters/presentation/letters_screen.dart';
 import '../../features/words/presentation/syllable_screen.dart';
 import '../../features/words/presentation/word_match_screen.dart';
 import '../../features/words/presentation/words_screen.dart';
+import '../../features/games/presentation/falling_letters_game.dart';
 import '../../features/games/presentation/games_screen.dart';
 import '../../features/rewards/presentation/rewards_screen.dart';
 import '../constants/app_constants.dart';
@@ -50,6 +51,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppConstants.routeGames,
         builder: (context, state) => const GamesScreen(),
+      ),
+      GoRoute(
+        path: '/games/falling-letters',
+        builder: (context, state) => const FallingLettersGame(),
       ),
       GoRoute(
         path: AppConstants.routeRewards,
