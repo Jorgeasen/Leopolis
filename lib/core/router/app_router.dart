@@ -13,6 +13,7 @@ import '../../features/games/presentation/falling_letters_game.dart';
 import '../../features/games/presentation/games_screen.dart';
 import '../../features/games/presentation/missing_letter_game.dart';
 import '../../features/games/presentation/word_scramble_game.dart';
+import '../../features/auth/presentation/parent_dashboard_screen.dart';
 import '../../features/auth/presentation/parent_login_screen.dart';
 import '../../features/rewards/presentation/rewards_screen.dart';
 import '../constants/app_constants.dart';
@@ -82,6 +83,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/parent-login',
         builder: (context, state) => const ParentLoginScreen(),
+      ),
+      GoRoute(
+        path: '/parent-dashboard',
+        builder: (context, state) => const ParentDashboardScreen(),
       ),
     ],
   );

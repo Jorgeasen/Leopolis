@@ -20,7 +20,7 @@ class _ParentLoginScreenState extends State<ParentLoginScreen> {
     if (!mounted) return;
     setState(() => _loading = false);
     if (result != null) {
-      context.go('/');
+      context.go('/parent-dashboard');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
