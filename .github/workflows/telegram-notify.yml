@@ -1,0 +1,48 @@
+name: 📬 Telegram Notificaciones
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  issues:
+    types: [closed]
+
+jobs:
+  notify-pr-merged:
+    name: 📦 PR mergeado
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar notificación
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          MESSAGE=$(printf "✅ *PR mergeado en Leópolis*\n\n🔀 PR #%s: %s\n👤 Autor: %s\n🔗 %s" "$PR_NUMBER" "$PR_TITLE" "$AUTHOR" "$PR_URL")
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${MESSAGE}" \
+            --data-urlencode "parse_mode=Markdown"
+
+  notify-issue-closed:
+    name: 🎯 Issue cerrado
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar notificación
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: |
+          MESSAGE=$(printf "🎯 *Issue cerrado en Leópolis*\n\n📋 Issue #%s: %s\n🔗 %s\n\n¿Lanzamos el siguiente issue? 🦁" "$ISSUE_NUMBER" "$ISSUE_TITLE" "$ISSUE_URL")
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${MESSAGE}" \
+            --data-urlencode "parse_mode=Markdown"
