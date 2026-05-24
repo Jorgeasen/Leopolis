@@ -4,8 +4,8 @@ import 'package:leopolis/features/words/data/words_repository.dart';
 
 void main() {
   group('WordsRepository', () {
-    test('getAll returns at least 30 words', () {
-      expect(WordsRepository.getAll().length, greaterThanOrEqualTo(30));
+    test('getAll returns exactly 30 words', () {
+      expect(WordsRepository.getAll().length, 30);
     });
 
     test('getAll contains level 1 and level 2 words', () {
@@ -40,6 +40,16 @@ void main() {
     test('getRandomDistractors excludes the given word', () {
       final distractors = WordsRepository.getRandomDistractors('gato', 5);
       expect(distractors.any((w) => w.palabra == 'gato'), false);
+    });
+
+    test('getRandomSyllableDistractors returns correct count', () {
+      final distractors = WordsRepository.getRandomSyllableDistractors('ma', 2);
+      expect(distractors.length, 2);
+    });
+
+    test('getRandomSyllableDistractors excludes the given syllable', () {
+      final distractors = WordsRepository.getRandomSyllableDistractors('ma', 5);
+      expect(distractors.any((s) => s == 'ma'), false);
     });
   });
 
