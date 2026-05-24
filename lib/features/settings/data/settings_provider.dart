@@ -48,6 +48,13 @@ class SettingsNotifier extends AsyncNotifier<AppSettings> {
     AudioService.instance.setSoundEnabled(enabled);
     await _save(current);
   }
+
+  Future<void> completeOnboarding(String childName) async {
+    final current = await _load();
+    current.childName = childName.trim().isEmpty ? 'Leo' : childName.trim();
+    current.hasCompletedOnboarding = true;
+    await _save(current);
+  }
 }
 
 final settingsProvider = AsyncNotifierProvider<SettingsNotifier, AppSettings>(

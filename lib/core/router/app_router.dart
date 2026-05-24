@@ -15,7 +15,9 @@ import '../../features/games/presentation/missing_letter_game.dart';
 import '../../features/games/presentation/word_scramble_game.dart';
 import '../../features/auth/presentation/parent_dashboard_screen.dart';
 import '../../features/auth/presentation/parent_login_screen.dart';
+import '../../features/onboarding/presentation/welcome_screen.dart';
 import '../../features/rewards/presentation/rewards_screen.dart';
+import '../../features/settings/data/settings_provider.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../constants/app_constants.dart';
 
@@ -23,10 +25,26 @@ part 'app_router.g.dart';
 
 @riverpod
 GoRouter appRouter(Ref ref) {
+  final settingsAsync = ref.watch(settingsProvider);
+
   return GoRouter(
     initialLocation: AppConstants.routeHome,
     debugLogDiagnostics: true,
+    redirect: (context, state) {
+      final settings = settingsAsync.valueOrNull;
+      if (settings == null) return null;
+      final onWelcome = state.matchedLocation == '/welcome';
+      if (!settings.hasCompletedOnboarding && !onWelcome) return '/welcome';
+      if (settings.hasCompletedOnboarding && onWelcome) {
+        return AppConstants.routeHome;
+      }
+      return null;
+    },
     routes: [
+      GoRoute(
+        path: '/welcome',
+        builder: (context, state) => const WelcomeScreen(),
+      ),
       GoRoute(
         path: AppConstants.routeHome,
         builder: (context, state) => const HomeScreen(),
