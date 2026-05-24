@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/home/presentation/home_screen.dart';
+import '../../features/letters/presentation/letter_detail_screen.dart';
 import '../../features/letters/presentation/letters_screen.dart';
 import '../../features/words/presentation/words_screen.dart';
 import '../../features/games/presentation/games_screen.dart';
@@ -24,6 +25,13 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppConstants.routeLetters,
         builder: (context, state) => const LettersScreen(),
+      ),
+      GoRoute(
+        path: '/letters/:letter',
+        builder: (context, state) {
+          final letter = state.pathParameters['letter'] ?? 'A';
+          return LetterDetailScreen(letter: letter);
+        },
       ),
       GoRoute(
         path: AppConstants.routeWords,
