@@ -1,0 +1,82 @@
+name: 🔄 Issue Lifecycle
+
+on:
+  pull_request:
+    types: [opened, closed]
+  issues:
+    types: [labeled]
+
+jobs:
+  # ─────────────────────────────────────────────
+  # Cuando se abre un PR: marca el issue como in-progress
+  # ─────────────────────────────────────────────
+  mark-in-progress:
+    name: 🔄 Marcar issue como in-progress
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: read
+
+    steps:
+      - name: Extraer número de issue del PR
+        id: extract
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # Buscar "Closes #N" en el body del PR
+          ISSUE_NUM=$(echo "$PR_BODY" | grep -oP 'Closes #\K[0-9]+' | head -1)
+          echo "issue_number=$ISSUE_NUM" >> $GITHUB_OUTPUT
+          echo "Found issue: $ISSUE_NUM"
+
+      - name: Añadir label in-progress al issue
+        if: steps.extract.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue edit ${{ steps.extract.outputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --add-label "in-progress" \
+            --remove-label "agent-ready" 2>/dev/null || true
+
+      - name: Comentar en el issue
+        if: steps.extract.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ steps.extract.outputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "🤖 **PR abierto**: [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})
+
+          CI en curso — se mergeará automáticamente cuando los checks pasen."
+
+  # ─────────────────────────────────────────────
+  # Cuando se mergea un PR: notifica que el issue quedó cerrado
+  # ─────────────────────────────────────────────
+  notify-merged:
+    name: ✅ Notificar merge completado
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: read
+
+    steps:
+      - name: Extraer número de issue
+        id: extract
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          ISSUE_NUM=$(echo "$PR_BODY" | grep -oP 'Closes #\K[0-9]+' | head -1)
+          echo "issue_number=$ISSUE_NUM" >> $GITHUB_OUTPUT
+
+      - name: Comentar cierre exitoso
+        if: steps.extract.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ steps.extract.outputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "✅ **Integrado en main** · PR #${{ github.event.pull_request.number }} mergeado.
+
+          Ejecuta \`/next-issue\` en Claude Code para continuar con el siguiente issue del roadmap."
