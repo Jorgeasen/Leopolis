@@ -1,0 +1,55 @@
+name: 📬 Telegram Notificaciones
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  issues:
+    types: [closed]
+
+jobs:
+  notify-pr-merged:
+    name: 📦 PR mergeado
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar notificación
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+
+          MESSAGE="✅ *PR mergeado en Leópolis*
+
+🔀 PR \#${PR_NUMBER}: ${PR_TITLE}
+👤 Autor: ${AUTHOR}
+🔗 ${PR_URL}"
+
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "text=${MESSAGE}" \
+            --data-urlencode "parse_mode=Markdown"
+
+  notify-issue-closed:
+    name: 🎯 Issue cerrado
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar notificación
+        run: |
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          ISSUE_NUMBER="${{ github.event.issue.number }}"
+          ISSUE_URL="${{ github.event.issue.html_url }}"
+
+          MESSAGE="🎯 *Issue cerrado en Leópolis*
+
+📋 Issue \#${ISSUE_NUMBER}: ${ISSUE_TITLE}
+🔗 ${ISSUE_URL}
+
+¿Lanzamos el siguiente issue? 🦁"
+
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            --data-urlencode "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            --data-urlencode "text=${MESSAGE}" \
+            --data-urlencode "parse_mode=Markdown"
