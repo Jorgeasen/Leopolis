@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/leo_mascot.dart';
 import '../../words/data/words_repository.dart';
 
 class MissingLetterGame extends StatefulWidget {
@@ -437,10 +438,8 @@ class _ResultsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                '🦁',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 80),
+              const Center(
+                child: LeoMascot(state: LeoState.celebrating, size: 80),
               ),
               const SizedBox(height: 16),
               const Text(
