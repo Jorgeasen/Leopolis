@@ -94,6 +94,14 @@ class _RewardsScreenState extends ConsumerState<RewardsScreen>
               return _CelebrationOverlay(progress: value);
             },
           ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: GestureDetector(
+              onLongPress: () => context.push('/parent-login'),
+              child: const SizedBox(width: 64, height: 64),
+            ),
+          ),
         ],
       ),
     );
