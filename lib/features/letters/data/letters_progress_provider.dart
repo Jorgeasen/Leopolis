@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/database/collections/letter_progress.dart';
 import '../../../core/database/isar_service.dart';
+import '../../rewards/data/rewards_provider.dart';
 
 class LettersProgressNotifier extends AsyncNotifier<Set<String>> {
   @override
@@ -16,11 +18,17 @@ class LettersProgressNotifier extends AsyncNotifier<Set<String>> {
     final db = IsarService.instance.db;
     final existing = await db.letterProgress.getByLetter(letter);
     final record = existing ?? (LetterProgress()..letter = letter);
+    final wasAlreadyCompleted = record.isCompleted;
     record.isCompleted = true;
     record.completedAt = DateTime.now();
     await db.writeTxn(() => db.letterProgress.put(record));
     final current = state.valueOrNull ?? {};
     state = AsyncData({...current, letter});
+    if (!wasAlreadyCompleted) {
+      await ref
+          .read(rewardsProvider.notifier)
+          .addStars(AppConstants.starsPerExercise);
+    }
   }
 
   bool isCompleted(String letter) =>
