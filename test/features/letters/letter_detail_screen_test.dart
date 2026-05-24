@@ -55,11 +55,6 @@ void main() {
         ),
       );
 
-      final navButtons = tester.widgetList<Container>(find.byType(Container));
-      final tallEnough =
-          navButtons.any((c) => c.constraints?.minHeight != null
-              ? c.constraints!.minHeight! >= 64
-              : false);
       // Los botones tienen height: 64 hardcodeado
       expect(find.text('Escuchar letra'), findsOneWidget);
     });

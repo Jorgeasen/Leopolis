@@ -6,6 +6,7 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
+    - "lib/firebase_options.dart"
   errors:
     invalid_annotation_target: ignore
 
