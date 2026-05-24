@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../data/word_data.dart';
@@ -99,6 +100,7 @@ class _SyllableScreenState extends State<SyllableScreen>
         _celebrating = true;
         _score++;
       });
+      SessionTracker.instance.recordStars(1);
       _slideController.forward();
       _playSound('audio/fanfare.mp3');
       await Future.delayed(const Duration(milliseconds: 1500));

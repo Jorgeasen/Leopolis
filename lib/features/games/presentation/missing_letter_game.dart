@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/leo_mascot.dart';
 import '../../words/data/words_repository.dart';
@@ -110,6 +111,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
         _answered = true;
         _correctCount++;
       });
+      SessionTracker.instance.recordStars(1);
       _revealController.forward();
       _playSound('audio/fanfare.mp3');
       await Future.delayed(const Duration(milliseconds: 1500));
