@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/audio/audio_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
@@ -32,7 +32,6 @@ class _WordMatchScreenState extends ConsumerState<WordMatchScreen>
 
   late final AnimationController _shakeController;
   late final Animation<double> _shakeAnimation;
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -78,25 +77,20 @@ class _WordMatchScreenState extends ConsumerState<WordMatchScreen>
           .read(rewardsProvider.notifier)
           .addStars(AppConstants.starsPerExercise);
       ref.read(wordsProgressProvider.notifier).addWordMatchScore();
-      _playSound('audio/fanfare.mp3');
+      AudioService.instance.playSuccess();
       await Future.delayed(const Duration(milliseconds: 1500));
       if (mounted) _loadNewWord();
     } else {
       setState(() => _shakingWord = option.palabra);
-      _playSound('audio/boing.mp3');
+      AudioService.instance.playError();
       await _shakeController.forward(from: 0);
       if (mounted) setState(() => _shakingWord = null);
     }
   }
 
-  void _playSound(String assetPath) {
-    _audioPlayer.play(AssetSource(assetPath)).catchError((_) {});
-  }
-
   @override
   void dispose() {
     _shakeController.dispose();
-    _audioPlayer.dispose();
     super.dispose();
   }
 

@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/audio/audio_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
@@ -22,7 +22,6 @@ class _MissingLetterGameState extends State<MissingLetterGame>
   static const int _wordsToWin = 10;
 
   final _rng = Random();
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   late final AnimationController _shakeController;
   late final Animation<double> _shakeAnimation;
@@ -113,7 +112,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
       });
       SessionTracker.instance.recordStars(1);
       _revealController.forward();
-      _playSound('audio/fanfare.mp3');
+      AudioService.instance.playSuccess();
       await Future.delayed(const Duration(milliseconds: 1500));
       if (!mounted) return;
       if (_correctCount >= _wordsToWin) {
@@ -123,7 +122,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
       }
     } else {
       setState(() => _shakingOption = letter);
-      _playSound('audio/boing.mp3');
+      AudioService.instance.playError();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -146,15 +145,10 @@ class _MissingLetterGameState extends State<MissingLetterGame>
     _loadNewWord();
   }
 
-  void _playSound(String assetPath) {
-    _audioPlayer.play(AssetSource(assetPath)).catchError((_) {});
-  }
-
   @override
   void dispose() {
     _shakeController.dispose();
     _revealController.dispose();
-    _audioPlayer.dispose();
     super.dispose();
   }
 

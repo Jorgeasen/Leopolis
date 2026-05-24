@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/audio/audio_service.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/leo_mascot.dart';
@@ -21,7 +21,6 @@ class _WordScrambleGameState extends State<WordScrambleGame>
   static const int _wordsToWin = 8;
 
   final _rng = Random();
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   late final AnimationController _shakeController;
   late final Animation<double> _shakeAnimation;
@@ -90,7 +89,7 @@ class _WordScrambleGameState extends State<WordScrambleGame>
     if (letter == null || _slots[slotIndex] != null) return;
 
     if (letter == _currentWord[slotIndex]) {
-      _playSound('audio/fanfare.mp3');
+      AudioService.instance.playSuccess();
       setState(() {
         _slots[slotIndex] = letter;
         _available[availableIndex] = null;
@@ -102,7 +101,7 @@ class _WordScrambleGameState extends State<WordScrambleGame>
         _shakingSlot = slotIndex;
         _hoverSlot = null;
       });
-      _playSound('audio/boing.mp3');
+      AudioService.instance.playError();
       _shakeController.forward(from: 0).then((_) {
         if (mounted) setState(() => _shakingSlot = null);
       });
@@ -149,14 +148,9 @@ class _WordScrambleGameState extends State<WordScrambleGame>
     _loadNewWord();
   }
 
-  void _playSound(String assetPath) {
-    _audioPlayer.play(AssetSource(assetPath)).catchError((_) {});
-  }
-
   @override
   void dispose() {
     _shakeController.dispose();
-    _audioPlayer.dispose();
     super.dispose();
   }
 

@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/audio/audio_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
@@ -35,7 +35,6 @@ class _SyllableScreenState extends ConsumerState<SyllableScreen>
   late final Animation<double> _shakeAnimation;
   late final AnimationController _slideController;
   late final Animation<Offset> _slideAnimation;
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -110,12 +109,12 @@ class _SyllableScreenState extends ConsumerState<SyllableScreen>
           .addStars(AppConstants.starsPerExercise);
       ref.read(wordsProgressProvider.notifier).addSyllableScore();
       _slideController.forward();
-      _playSound('audio/fanfare.mp3');
+      AudioService.instance.playSuccess();
       await Future.delayed(const Duration(milliseconds: 1500));
       if (mounted) _loadNewWord();
     } else {
       setState(() => _shakingOption = syllable);
-      _playSound('audio/boing.mp3');
+      AudioService.instance.playError();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -130,15 +129,10 @@ class _SyllableScreenState extends ConsumerState<SyllableScreen>
     }
   }
 
-  void _playSound(String assetPath) {
-    _audioPlayer.play(AssetSource(assetPath)).catchError((_) {});
-  }
-
   @override
   void dispose() {
     _shakeController.dispose();
     _slideController.dispose();
-    _audioPlayer.dispose();
     super.dispose();
   }
 

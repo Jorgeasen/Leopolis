@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/audio/audio_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
@@ -26,7 +26,6 @@ class _FallingLettersGameState extends State<FallingLettersGame>
   static const int _maxLetters = 8;
 
   final _rng = Random();
-  final AudioPlayer _audioPlayer = AudioPlayer();
   late final Ticker _ticker;
   int _idCounter = 0;
 
@@ -117,12 +116,12 @@ class _FallingLettersGameState extends State<FallingLettersGame>
         }
         _pickTarget();
       });
-      _playSound('audio/fanfare.mp3');
+      AudioService.instance.playSuccess();
     } else {
       setState(
         () => letter.shakeStartMs = DateTime.now().millisecondsSinceEpoch,
       );
-      _playSound('audio/boing.mp3');
+      AudioService.instance.playError();
     }
   }
 
@@ -145,14 +144,9 @@ class _FallingLettersGameState extends State<FallingLettersGame>
     _pickTarget();
   }
 
-  void _playSound(String assetPath) {
-    _audioPlayer.play(AssetSource(assetPath)).catchError((_) {});
-  }
-
   @override
   void dispose() {
     _ticker.dispose();
-    _audioPlayer.dispose();
     super.dispose();
   }
 
