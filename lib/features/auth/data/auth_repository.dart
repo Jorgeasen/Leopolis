@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../core/firebase/firebase_service.dart';
+import '../../../core/sync/sync_service.dart';
 
 class AuthRepository {
   AuthRepository._();
@@ -23,7 +26,9 @@ class AuthRepository {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      return await _auth.signInWithCredential(credential);
+      final result = await _auth.signInWithCredential(credential);
+      unawaited(SyncService.instance.syncAll());
+      return result;
     } catch (_) {
       return null;
     }

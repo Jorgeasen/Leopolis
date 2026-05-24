@@ -26,6 +26,12 @@ class AppConstants {
   static const String prefSoundEnabled = 'sound_enabled';
   static const String prefVoiceEnabled = 'voice_enabled';
 
+  // Firestore paths
+  static const String fsUsers = 'users';
+  static const String fsProgressLetters = 'progress/letters';
+  static const String fsProgressRewards = 'progress/rewards';
+  static const String fsSessions = 'sessions';
+
   // Gamificación
   static const int starsPerExercise = 3;
   static const int starsToUnlockLevel = 9;
