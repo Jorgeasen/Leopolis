@@ -2,22 +2,26 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
+import '../../rewards/data/rewards_provider.dart';
 import '../data/word_data.dart';
+import '../data/words_progress_provider.dart';
 import '../data/words_repository.dart';
 
-class SyllableScreen extends StatefulWidget {
+class SyllableScreen extends ConsumerStatefulWidget {
   const SyllableScreen({super.key});
 
   @override
-  State<SyllableScreen> createState() => _SyllableScreenState();
+  ConsumerState<SyllableScreen> createState() => _SyllableScreenState();
 }
 
-class _SyllableScreenState extends State<SyllableScreen>
+class _SyllableScreenState extends ConsumerState<SyllableScreen>
     with TickerProviderStateMixin {
   late WordData _currentWord;
   late int _hiddenIndex;
@@ -101,6 +105,10 @@ class _SyllableScreenState extends State<SyllableScreen>
         _score++;
       });
       SessionTracker.instance.recordStars(1);
+      ref
+          .read(rewardsProvider.notifier)
+          .addStars(AppConstants.starsPerExercise);
+      ref.read(wordsProgressProvider.notifier).addSyllableScore();
       _slideController.forward();
       _playSound('audio/fanfare.mp3');
       await Future.delayed(const Duration(milliseconds: 1500));
