@@ -12,27 +12,106 @@ class GamesScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppTheme.gamesColor,
         foregroundColor: Colors.white,
-        title: const Text('Juegos 🎮',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Juegos 🎮',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.go(AppConstants.routeHome),
         ),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('🎮', style: TextStyle(fontSize: 80)),
             const SizedBox(height: 16),
             Text(
-              '¡Próximamente!',
-              style: Theme.of(context).textTheme.displayMedium,
+              '¿A qué jugamos?',
+              style: Theme.of(context).textTheme.headlineLarge,
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Minijuegos para aprender jugando',
-              style: Theme.of(context).textTheme.bodyLarge,
+            const SizedBox(height: 32),
+            _GameCard(
+              emoji: '🔤',
+              titulo: 'Letras que caen',
+              subtitulo: 'Toca la letra correcta antes de que llegue al suelo',
+              color: AppTheme.gamesColor,
+              onTap: () => context.push('/games/falling-letters'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GameCard extends StatelessWidget {
+  const _GameCard({
+    required this.emoji,
+    required this.titulo,
+    required this.subtitulo,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String emoji;
+  final String titulo;
+  final String subtitulo;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        constraints: const BoxConstraints(minHeight: 120),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.4),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 56)),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    titulo,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitulo,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white,
+              size: 36,
             ),
           ],
         ),
