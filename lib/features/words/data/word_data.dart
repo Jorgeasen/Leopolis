@@ -4,12 +4,14 @@ class WordData {
     required this.imagenAsset,
     required this.silabas,
     required this.nivelDificultad,
+    this.emoji = '',
   });
 
   final String palabra;
   final String imagenAsset;
   final List<String> silabas;
   final int nivelDificultad;
+  final String emoji;
 
   String get palabraCompleta => silabas.join();
 

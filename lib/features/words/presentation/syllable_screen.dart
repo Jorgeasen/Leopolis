@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../data/word_data.dart';
 import '../data/words_repository.dart';
 
@@ -158,7 +159,7 @@ class _SyllableScreenState extends State<SyllableScreen>
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    _ImageDisplay(imagenAsset: _currentWord.imagenAsset),
+                    _ImageDisplay(word: _currentWord),
                     if (_celebrating)
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -222,9 +223,9 @@ class _SyllableScreenState extends State<SyllableScreen>
 }
 
 class _ImageDisplay extends StatelessWidget {
-  const _ImageDisplay({required this.imagenAsset});
+  const _ImageDisplay({required this.word});
 
-  final String imagenAsset;
+  final WordData word;
 
   @override
   Widget build(BuildContext context) {
@@ -234,14 +235,10 @@ class _ImageDisplay extends StatelessWidget {
         color: AppTheme.wordsColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Image.asset(
-        imagenAsset,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => const Icon(
-          Icons.image_rounded,
-          size: 80,
-          color: AppTheme.wordsColor,
-        ),
+      child: AssetImageWithFallback(
+        assetPath: word.imagenAsset,
+        fallbackEmoji: word.emoji,
+        emojiFontSize: 80,
       ),
     );
   }

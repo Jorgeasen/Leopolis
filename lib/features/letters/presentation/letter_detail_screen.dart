@@ -4,6 +4,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../data/letter_data.dart';
 import '../data/letters_repository.dart';
 
@@ -300,14 +301,9 @@ class _WordExample extends StatelessWidget {
         SizedBox(
           width: 200,
           height: 200,
-          child: Image.asset(
-            data.imagenAsset,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) => const Icon(
-              Icons.image_rounded,
-              size: 120,
-              color: AppTheme.lettersColor,
-            ),
+          child: AssetImageWithFallback(
+            assetPath: data.imagenAsset,
+            fallbackEmoji: data.emoji,
           ),
         ),
         const SizedBox(height: 12),

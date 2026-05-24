@@ -41,27 +41,23 @@ class TracingCanvasState extends State<TracingCanvas> {
   }
 
   void _evaluate() {
-    final drawn = _boundingBox(_points);
-    if (drawn == null || drawn.width < 20 || drawn.height < 20) {
+    // Necesita al menos 30 puntos para descartar clicks accidentales
+    if (_points.length < 30) {
       widget.onFailure();
       return;
     }
-    final w = widget.canvasSize.width;
-    final h = widget.canvasSize.height;
-    // La guía ocupa el 80% del canvas, centrada
-    final expected = Rect.fromLTWH(w * 0.10, h * 0.10, w * 0.80, h * 0.80);
-    const tol = 0.30;
-    final xOk = drawn.left >= expected.left - expected.width * tol &&
-        drawn.right <= expected.right + expected.width * tol &&
-        drawn.width >= expected.width * (1 - tol);
-    final yOk = drawn.top >= expected.top - expected.height * tol &&
-        drawn.bottom <= expected.bottom + expected.height * tol &&
-        drawn.height >= expected.height * (1 - tol);
-    if (xOk && yOk) {
-      widget.onSuccess();
-    } else {
+    final drawn = _boundingBox(_points);
+    if (drawn == null) {
       widget.onFailure();
+      return;
     }
+    // El trazo debe cubrir al menos 80px en alguno de los dos ejes.
+    // No se exige ambos: la 'I' es vertical y válida; la 'Z' es horizontal y válida.
+    if (drawn.width < 80 && drawn.height < 80) {
+      widget.onFailure();
+      return;
+    }
+    widget.onSuccess();
   }
 
   @override
@@ -71,7 +67,7 @@ class TracingCanvasState extends State<TracingCanvas> {
         GestureDetector(
           onPanStart: (d) => setState(() => _points.add(d.localPosition)),
           onPanUpdate: (d) => setState(() => _points.add(d.localPosition)),
-          onPanEnd: (_) => _evaluate(),
+          onPanEnd: (_) => setState(() {}), // solo repinta, no evalúa
           child: Container(
             width: widget.canvasSize.width,
             height: widget.canvasSize.height,
@@ -102,20 +98,46 @@ class TracingCanvasState extends State<TracingCanvas> {
           ),
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 64,
-          child: TextButton.icon(
-            onPressed: clear,
-            icon: const Icon(Icons.refresh_rounded, size: 28),
-            label: const Text(
-              'Borrar',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 64,
+                child: ElevatedButton.icon(
+                  onPressed: _evaluate,
+                  icon: const Icon(Icons.check_circle_rounded, size: 26),
+                  label: const Text(
+                    '¡Listo!',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.secondary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 3,
+                  ),
+                ),
+              ),
             ),
-            style: TextButton.styleFrom(
-              foregroundColor: AppTheme.lettersColor,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+            const SizedBox(width: 12),
+            SizedBox(
+              height: 64,
+              child: TextButton.icon(
+                onPressed: clear,
+                icon: const Icon(Icons.refresh_rounded, size: 26),
+                label: const Text(
+                  'Borrar',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppTheme.lettersColor,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
