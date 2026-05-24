@@ -1,0 +1,25 @@
+class WordData {
+  const WordData({
+    required this.palabra,
+    required this.imagenAsset,
+    required this.silabas,
+    required this.nivelDificultad,
+  });
+
+  final String palabra;
+  final String imagenAsset;
+  final List<String> silabas;
+  final int nivelDificultad;
+
+  String get palabraCompleta => silabas.join();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WordData &&
+          runtimeType == other.runtimeType &&
+          palabra == other.palabra;
+
+  @override
+  int get hashCode => palabra.hashCode;
+}
