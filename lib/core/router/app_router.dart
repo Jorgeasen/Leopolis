@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/letters/presentation/letter_detail_screen.dart';
 import '../../features/letters/presentation/letters_screen.dart';
+import '../../features/words/presentation/syllable_screen.dart';
 import '../../features/words/presentation/word_match_screen.dart';
 import '../../features/words/presentation/words_screen.dart';
 import '../../features/games/presentation/games_screen.dart';
@@ -41,6 +42,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/words/match',
         builder: (context, state) => const WordMatchScreen(),
+      ),
+      GoRoute(
+        path: '/words/syllable',
+        builder: (context, state) => const SyllableScreen(),
       ),
       GoRoute(
         path: AppConstants.routeGames,
