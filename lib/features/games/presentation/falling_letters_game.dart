@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/leo_mascot.dart';
 
@@ -109,6 +110,7 @@ class _FallingLettersGameState extends State<FallingLettersGame>
         letter.exploding = true;
         _stars++;
         _correctCount++;
+        SessionTracker.instance.recordStars(1);
         if (_correctCount % 5 == 0) {
           _fallDuration = (_fallDuration * 0.9)
               .clamp(_minFallDuration, _initialFallDuration);

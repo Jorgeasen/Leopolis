@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app.dart';
 import 'core/database/isar_service.dart';
+import 'core/database/session_tracker.dart';
 import 'core/sync/sync_service.dart';
 import 'firebase_options.dart';
 
@@ -12,6 +13,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await IsarService.instance.open();
+  SessionTracker.instance.start();
   SyncService.instance.startConnectivityListener();
 
   // Orientación horizontal para tablets (más cómodo para niños)

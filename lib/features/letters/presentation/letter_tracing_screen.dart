@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/app_constants.dart';
+import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/tracing_canvas.dart';
 import '../data/letters_progress_provider.dart';
@@ -86,6 +88,8 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
     await ref
         .read(lettersProgressProvider.notifier)
         .markCompleted(widget.letter);
+    SessionTracker.instance.recordLetter(widget.letter);
+    SessionTracker.instance.recordStars(AppConstants.starsPerExercise);
   }
 
   void _onFailure() {

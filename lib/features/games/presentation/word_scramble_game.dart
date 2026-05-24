@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/leo_mascot.dart';
 import '../../words/data/words_repository.dart';
@@ -113,6 +114,7 @@ class _WordScrambleGameState extends State<WordScrambleGame>
       _showCelebration = true;
       _completedWords++;
     });
+    SessionTracker.instance.recordStars(1);
     await Future.delayed(const Duration(milliseconds: 1600));
     if (!mounted) return;
     if (_completedWords >= _wordsToWin) {
