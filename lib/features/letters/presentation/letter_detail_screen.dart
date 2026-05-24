@@ -110,6 +110,11 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
                 ],
               ),
               const SizedBox(height: 16),
+              _ScaleButton(
+                onTap: () => context.push('/letters/${data.letra}/tracing'),
+                child: _tracingButton(),
+              ),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
@@ -170,6 +175,38 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
                 fontWeight: FontWeight.bold,
               ),
               overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tracingButton() {
+    return Container(
+      height: 64,
+      decoration: BoxDecoration(
+        color: AppTheme.secondary,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.secondary.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.edit_rounded, color: Colors.white, size: 28),
+          SizedBox(width: 8),
+          Text(
+            'Practicar trazo',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
