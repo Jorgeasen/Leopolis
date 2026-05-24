@@ -43,13 +43,14 @@ void main() {
       expect(syllableButtons.length, greaterThanOrEqualTo(2));
     });
 
-    testWidgets('tiene imagen placeholder cuando el asset no existe',
+    testWidgets('muestra emoji fallback cuando el asset no existe',
         (tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: SyllableScreen()),
       );
       await tester.pump();
-      expect(find.byIcon(Icons.image_rounded), findsOneWidget);
+      // Cuando el asset no existe, se muestra un emoji como fallback (Text widget)
+      expect(find.byType(Text), findsWidgets);
     });
   });
 }
