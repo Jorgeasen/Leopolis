@@ -7,6 +7,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/letters/presentation/letter_detail_screen.dart';
 import '../../features/letters/presentation/letter_tracing_screen.dart';
 import '../../features/letters/presentation/letters_screen.dart';
+import '../../features/words/presentation/syllable_dictation_screen.dart';
 import '../../features/words/presentation/syllable_screen.dart';
 import '../../features/words/presentation/word_match_screen.dart';
 import '../../features/words/presentation/words_screen.dart';
@@ -101,6 +102,11 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/words/syllable',
         pageBuilder: (c, s) => _fadeSlidePage(const SyllableScreen(), s),
+      ),
+      GoRoute(
+        path: '/words/syllable-dictation',
+        pageBuilder: (c, s) =>
+            _fadeSlidePage(const SyllableDictationScreen(), s),
       ),
       GoRoute(
         path: AppConstants.routeGames,
