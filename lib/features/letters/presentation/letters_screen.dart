@@ -43,11 +43,15 @@ class LettersScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
             child: Text(
               '¡Toca una letra!',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textDark,
+              ),
             ),
           ),
           Expanded(
@@ -55,7 +59,7 @@ class LettersScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(16),
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 80,
+                  maxCrossAxisExtent: 96,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
