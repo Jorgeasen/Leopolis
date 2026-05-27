@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/celebration_overlay.dart';
 import '../../../shared/widgets/tracing_canvas.dart';
+import '../data/letter_streak_provider.dart';
 import '../data/letters_progress_provider.dart';
 import '../data/letters_repository.dart';
 
@@ -26,6 +28,7 @@ class LetterTracingScreen extends ConsumerStatefulWidget {
 class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
     with TickerProviderStateMixin {
   final _canvasKey = GlobalKey<TracingCanvasState>();
+  Timer? _advanceTimer;
 
   late final AnimationController _starCtrl;
   late final Animation<double> _starScale;
@@ -68,6 +71,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
 
   @override
   void dispose() {
+    _advanceTimer?.cancel();
     _starCtrl.dispose();
     _shakeCtrl.dispose();
     super.dispose();
@@ -81,11 +85,20 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
     _starCtrl.forward(from: 0);
     CelebrationOverlay.show(context);
     await AudioService.instance.playSuccess();
+    if (!mounted) return;
     await ref
         .read(lettersProgressProvider.notifier)
         .markCompleted(widget.letter);
+    if (!mounted) return;
     SessionTracker.instance.recordLetter(widget.letter);
     SessionTracker.instance.recordStars(AppConstants.starsPerExercise);
+    ref.read(letterStreakProvider.notifier).state++;
+    final next = LettersRepository.getNext(widget.letter);
+    if (next != null) {
+      _advanceTimer = Timer(const Duration(seconds: 2), () {
+        if (mounted) context.go('/letters/${next.letra}/tracing');
+      });
+    }
   }
 
   void _onFailure() {
@@ -100,6 +113,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
   }
 
   void _reset() {
+    _advanceTimer?.cancel();
     _canvasKey.currentState?.clear();
     setState(() {
       _succeeded = false;
@@ -111,6 +125,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
   @override
   Widget build(BuildContext context) {
     final next = LettersRepository.getNext(widget.letter);
+    final streak = ref.watch(letterStreakProvider);
 
     return Scaffold(
       backgroundColor: AppTheme.background,
@@ -123,8 +138,26 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => context.go('/letters/${widget.letter}'),
+          onPressed: () {
+            _advanceTimer?.cancel();
+            context.go('/letters/${widget.letter}');
+          },
         ),
+        actions: [
+          if (streak >= 2)
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Center(
+                child: Text(
+                  '🔥 $streak',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -174,8 +207,10 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
                         child: _ActionButton(
                           label: 'Siguiente letra  ▶',
                           color: AppTheme.secondary,
-                          onTap: () =>
-                              context.go('/letters/${next.letra}/tracing'),
+                          onTap: () {
+                            _advanceTimer?.cancel();
+                            context.go('/letters/${next.letra}/tracing');
+                          },
                         ),
                       ),
                       const SizedBox(width: 12),
