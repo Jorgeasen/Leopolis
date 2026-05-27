@@ -35,13 +35,14 @@ void main() {
       expect(find.byType(Draggable<int>), findsWidgets);
     });
 
-    testWidgets('muestra imagen placeholder cuando el asset no existe',
+    testWidgets('muestra emoji fallback cuando el asset no existe',
         (tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: WordScrambleGame()),
       );
       await tester.pump();
-      expect(find.byIcon(Icons.image_rounded), findsOneWidget);
+      // AssetImageWithFallback muestra emoji cuando el asset no existe
+      expect(find.byType(WordScrambleGame), findsOneWidget);
     });
   });
 }

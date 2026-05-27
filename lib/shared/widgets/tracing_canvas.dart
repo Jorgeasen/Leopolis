@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
@@ -40,9 +42,10 @@ class TracingCanvasState extends State<TracingCanvas> {
     return Rect.fromLTRB(minX, minY, maxX, maxY);
   }
 
-  void _evaluate() {
-    // Necesita al menos 30 puntos para descartar clicks accidentales
-    if (_points.length < 30) {
+  // Llamado desde el padre via GlobalKey<TracingCanvasState>
+  void evaluate() {
+    // Mínimo de puntos para distinguir un trazo real de un toque accidental
+    if (_points.length < 60) {
       widget.onFailure();
       return;
     }
@@ -51,95 +54,68 @@ class TracingCanvasState extends State<TracingCanvas> {
       widget.onFailure();
       return;
     }
-    // El trazo debe cubrir al menos 80px en alguno de los dos ejes.
-    // No se exige ambos: la 'I' es vertical y válida; la 'Z' es horizontal y válida.
-    if (drawn.width < 80 && drawn.height < 80) {
+    // El trazo debe cubrir ≥30% del canvas en al menos un eje.
+    // Umbral relativo al tamaño real del canvas (no fijo en px).
+    final minDim = min(widget.canvasSize.width, widget.canvasSize.height);
+    if (drawn.width < minDim * 0.30 && drawn.height < minDim * 0.30) {
+      widget.onFailure();
+      return;
+    }
+    // El trazo debe estar distribuido: pasar por al menos 3 zonas distintas
+    // de una cuadrícula 3×3 (descarta garabatos concentrados en un área).
+    if (_gridCoverage() < 3) {
       widget.onFailure();
       return;
     }
     widget.onSuccess();
   }
 
+  // Cuenta cuántas celdas de una cuadrícula 3×3 toca el trazo
+  int _gridCoverage() {
+    const g = 3;
+    final cells = <int>{};
+    for (final p in _points) {
+      final c = (p.dx / widget.canvasSize.width * g).floor().clamp(0, g - 1);
+      final r = (p.dy / widget.canvasSize.height * g).floor().clamp(0, g - 1);
+      cells.add(r * g + c);
+    }
+    return cells.length;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onPanStart: (d) => setState(() => _points.add(d.localPosition)),
-          onPanUpdate: (d) => setState(() => _points.add(d.localPosition)),
-          onPanEnd: (_) => setState(() {}), // solo repinta, no evalúa
-          child: Container(
-            width: widget.canvasSize.width,
-            height: widget.canvasSize.height,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: AppTheme.lettersColor.withValues(alpha: 0.3),
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(22),
-              child: CustomPaint(
-                painter: _TracingPainter(
-                  letter: widget.letter,
-                  points: _points,
-                ),
-              ),
-            ),
+    return GestureDetector(
+      onPanStart: (d) => setState(() => _points.add(d.localPosition)),
+      onPanUpdate: (d) => setState(() => _points.add(d.localPosition)),
+      onPanEnd: (_) => setState(() {}),
+      child: Container(
+        width: widget.canvasSize.width,
+        height: widget.canvasSize.height,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: AppTheme.lettersColor.withValues(alpha: 0.3),
+            width: 2,
           ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 64,
-                child: ElevatedButton.icon(
-                  onPressed: _evaluate,
-                  icon: const Icon(Icons.check_circle_rounded, size: 26),
-                  label: const Text(
-                    '¡Listo!',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.secondary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    elevation: 3,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              height: 64,
-              child: TextButton.icon(
-                onPressed: clear,
-                icon: const Icon(Icons.refresh_rounded, size: 26),
-                label: const Text(
-                  'Borrar',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppTheme.lettersColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                ),
-              ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-      ],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(22),
+          child: CustomPaint(
+            painter: _TracingPainter(
+              letter: widget.letter,
+              points: _points,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

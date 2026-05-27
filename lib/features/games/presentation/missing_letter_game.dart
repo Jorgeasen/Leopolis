@@ -7,6 +7,7 @@ import '../../../core/audio/audio_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../../../shared/widgets/leo_mascot.dart';
 import '../../words/data/words_repository.dart';
 
@@ -30,6 +31,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
 
   late String _currentWord;
   late String _imagenAsset;
+  late String _emoji;
   late int _hiddenIndex;
   late List<String> _options;
   String? _shakingOption;
@@ -95,6 +97,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
     setState(() {
       _currentWord = upper;
       _imagenAsset = data.imagenAsset;
+      _emoji = data.emoji;
       _hiddenIndex = hiddenIdx;
       _options = options;
       _answered = false;
@@ -126,7 +129,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('¡Inténtalo otra vez! 🦁'),
+            content: Text('¡No! 🦁'),
             duration: Duration(milliseconds: 700),
             behavior: SnackBarBehavior.floating,
           ),
@@ -185,7 +188,7 @@ class _MissingLetterGameState extends State<MissingLetterGame>
             children: [
               Expanded(
                 flex: 2,
-                child: _ImageDisplay(imagenAsset: _imagenAsset),
+                child: _ImageDisplay(imagenAsset: _imagenAsset, emoji: _emoji),
               ),
               const SizedBox(height: 20),
               _WordDisplay(
@@ -230,8 +233,9 @@ class _MissingLetterGameState extends State<MissingLetterGame>
 // ── Sub-widgets ──────────────────────────────────────────────────────────────
 
 class _ImageDisplay extends StatelessWidget {
-  const _ImageDisplay({required this.imagenAsset});
+  const _ImageDisplay({required this.imagenAsset, required this.emoji});
   final String imagenAsset;
+  final String emoji;
 
   @override
   Widget build(BuildContext context) {
@@ -241,14 +245,10 @@ class _ImageDisplay extends StatelessWidget {
         color: AppTheme.gamesColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Image.asset(
-        imagenAsset,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => const Icon(
-          Icons.image_rounded,
-          size: 80,
-          color: AppTheme.gamesColor,
-        ),
+      child: AssetImageWithFallback(
+        assetPath: imagenAsset,
+        fallbackEmoji: emoji.isEmpty ? '🖼️' : emoji,
+        emojiFontSize: 100,
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -85,9 +87,14 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
   }
 
   void _onFailure() {
-    setState(() => _message = '¡Inténtalo otra vez! 🦁');
+    setState(() => _message = '¡No! 🦁');
     _shakeCtrl.forward(from: 0);
     AudioService.instance.playError();
+    // Borra el trazo automáticamente tras la animación de shake
+    // para que Leo pueda volver a dibujar sin buscar el botón de borrar
+    Future.delayed(const Duration(milliseconds: 700), () {
+      if (mounted) _canvasKey.currentState?.clear();
+    });
   }
 
   void _reset() {
@@ -130,39 +137,97 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
                   color: AppTheme.textDark,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Expanded(
-                child: Center(
-                  child: AnimatedBuilder(
-                    animation: _shakeOffset,
-                    builder: (context, child) => Transform.translate(
-                      offset: Offset(_shakeOffset.value, 0),
-                      child: child,
-                    ),
-                    child: TracingCanvas(
-                      key: _canvasKey,
-                      letter: widget.letter,
-                      canvasSize: const Size(280, 280),
-                      onSuccess: _onSuccess,
-                      onFailure: _onFailure,
-                    ),
-                  ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final sz = min(constraints.maxWidth, constraints.maxHeight);
+                    return Center(
+                      child: AnimatedBuilder(
+                        animation: _shakeOffset,
+                        builder: (context, child) => Transform.translate(
+                          offset: Offset(_shakeOffset.value, 0),
+                          child: child,
+                        ),
+                        child: TracingCanvas(
+                          key: _canvasKey,
+                          letter: widget.letter,
+                          canvasSize: Size(sz, sz),
+                          onSuccess: _onSuccess,
+                          onFailure: _onFailure,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               _buildFeedback(),
               const SizedBox(height: 12),
-              if (_succeeded && next != null)
-                _ActionButton(
-                  label: 'Siguiente letra  ▶',
-                  color: AppTheme.secondary,
-                  onTap: () => context.go('/letters/${next.letra}/tracing'),
+              if (_succeeded)
+                Row(
+                  children: [
+                    if (next != null) ...[
+                      Expanded(
+                        child: _ActionButton(
+                          label: 'Siguiente letra  ▶',
+                          color: AppTheme.secondary,
+                          onTap: () =>
+                              context.go('/letters/${next.letra}/tracing'),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+                    SizedBox(
+                      height: 64,
+                      width: 72,
+                      child: ElevatedButton(
+                        onPressed: _reset,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              AppTheme.lettersColor.withValues(alpha: 0.85),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 4,
+                          padding: EdgeInsets.zero,
+                        ),
+                        child: const Icon(Icons.refresh_rounded, size: 30),
+                      ),
+                    ),
+                  ],
                 )
               else if (!_succeeded)
-                _ActionButton(
-                  label: '🔄 Volver a intentar',
-                  color: AppTheme.lettersColor.withValues(alpha: 0.8),
-                  onTap: _reset,
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ActionButton(
+                        label: '✓ ¡Listo!',
+                        color: AppTheme.secondary,
+                        onTap: () => _canvasKey.currentState?.evaluate(),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    SizedBox(
+                      height: 64,
+                      width: 72,
+                      child: ElevatedButton(
+                        onPressed: _reset,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              AppTheme.lettersColor.withValues(alpha: 0.85),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 4,
+                          padding: EdgeInsets.zero,
+                        ),
+                        child: const Icon(Icons.refresh_rounded, size: 30),
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),

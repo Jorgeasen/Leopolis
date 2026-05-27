@@ -2,7 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../../core/audio/audio_service.dart';
+import '../../../core/database/collections/letter_progress.dart';
+import '../../../core/database/collections/rewards_data.dart';
+import '../../../core/database/collections/session_data.dart';
 import '../../../core/database/isar_service.dart';
+import '../../letters/data/letters_progress_provider.dart';
+import '../../rewards/data/rewards_provider.dart';
+import '../../words/data/word_progress_data.dart';
 import 'app_settings.dart';
 
 class SettingsNotifier extends AsyncNotifier<AppSettings> {
@@ -54,6 +60,19 @@ class SettingsNotifier extends AsyncNotifier<AppSettings> {
     current.childName = childName.trim().isEmpty ? 'Leo' : childName.trim();
     current.hasCompletedOnboarding = true;
     await _save(current);
+  }
+
+  Future<void> resetLeoProgress() async {
+    final db = IsarService.instance.db;
+    await db.writeTxn(() async {
+      await db.letterProgress.clear();
+      await db.rewardsDatas.clear();
+      await db.wordProgressDatas.clear();
+      await db.sessionDatas.clear();
+    });
+    // Forzar recarga de los providers para que la UI refleje el reset
+    ref.invalidate(lettersProgressProvider);
+    ref.invalidate(rewardsProvider);
   }
 }
 

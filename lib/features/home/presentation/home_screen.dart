@@ -99,13 +99,26 @@ class HomeScreen extends ConsumerWidget {
       ),
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: GridView.count(
-        crossAxisCount: 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-        children: modules.map((m) => _buildModuleCard(context, m)).toList(),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final cardWidth = (constraints.maxWidth - 16) / 2;
+            // Cap card height so they always fit on screen (140–200px)
+            final cardHeight = cardWidth.clamp(140.0, 200.0);
+            return GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: cardWidth / cardHeight,
+              children:
+                  modules.map((m) => _buildModuleCard(context, m)).toList(),
+            );
+          },
+        ),
       ),
     );
   }
@@ -118,13 +131,13 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(module.emoji, style: const TextStyle(fontSize: 56)),
-            const SizedBox(height: 12),
+            Text(module.emoji, style: const TextStyle(fontSize: 44)),
+            const SizedBox(height: 8),
             Text(
               module.title,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),

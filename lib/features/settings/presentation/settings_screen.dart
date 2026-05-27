@@ -29,6 +29,40 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     super.dispose();
   }
 
+  Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('¿Borrar todo el progreso?'),
+        content: const Text(
+          'Se eliminarán todas las estrellas, letras completadas y sesiones de Leo. Esta acción no se puede deshacer.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Borrar todo'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      await ref.read(settingsProvider.notifier).resetLeoProgress();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ Progreso borrado'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final settingsAsync = ref.watch(settingsProvider);
@@ -196,6 +230,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppTheme.textDark,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () => _confirmReset(context, ref),
+                child: Container(
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade400,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.red.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '🗑️ Borrar progreso de Leo',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ),
