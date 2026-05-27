@@ -6,21 +6,30 @@
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "env": {
+        "FIREBASE_CPP_SDK_DIR": "D:\\firebase_sdk\\firebase_cpp_sdk_windows"
+      }
     },
     {
       "name": "Leopolis (profile)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "env": {
+        "FIREBASE_CPP_SDK_DIR": "D:\\firebase_sdk\\firebase_cpp_sdk_windows"
+      }
     },
     {
       "name": "Leopolis (release)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "env": {
+        "FIREBASE_CPP_SDK_DIR": "D:\\firebase_sdk\\firebase_cpp_sdk_windows"
+      }
     },
     {
       "name": "Tests",

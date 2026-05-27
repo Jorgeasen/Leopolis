@@ -16,8 +16,7 @@ void main() {
     });
 
     test('getByCategory returns only words of that category', () {
-      final animales =
-          WordsRepository.getByCategory(WordCategory.animales);
+      final animales = WordsRepository.getByCategory(WordCategory.animales);
       expect(animales.isNotEmpty, true);
       expect(
         animales.every((w) => w.category == WordCategory.animales),

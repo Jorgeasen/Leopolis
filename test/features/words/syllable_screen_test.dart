@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leopolis/features/words/presentation/syllable_screen.dart';
 
-Widget _wrap() => const ProviderScope(child: MaterialApp(home: SyllableScreen()));
+Widget _wrap() =>
+    const ProviderScope(child: MaterialApp(home: SyllableScreen()));
 
 void main() {
   group('SyllableScreen', () {

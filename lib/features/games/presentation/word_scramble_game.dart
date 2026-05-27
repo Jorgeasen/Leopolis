@@ -1,23 +1,26 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/audio/audio_service.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../../../shared/widgets/leo_mascot.dart';
+import '../../rewards/data/rewards_provider.dart';
 import '../../words/data/words_repository.dart';
 
-class WordScrambleGame extends StatefulWidget {
+class WordScrambleGame extends ConsumerStatefulWidget {
   const WordScrambleGame({super.key});
 
   @override
-  State<WordScrambleGame> createState() => _WordScrambleGameState();
+  ConsumerState<WordScrambleGame> createState() => _WordScrambleGameState();
 }
 
-class _WordScrambleGameState extends State<WordScrambleGame>
+class _WordScrambleGameState extends ConsumerState<WordScrambleGame>
     with SingleTickerProviderStateMixin {
   static const int _wordsToWin = 8;
 
@@ -117,6 +120,7 @@ class _WordScrambleGameState extends State<WordScrambleGame>
       _completedWords++;
     });
     SessionTracker.instance.recordStars(1);
+    ref.read(rewardsProvider.notifier).addStars(AppConstants.starsPerExercise);
     await Future.delayed(const Duration(milliseconds: 1600));
     if (!mounted) return;
     if (_completedWords >= _wordsToWin) {
@@ -190,37 +194,40 @@ class _WordScrambleGameState extends State<WordScrambleGame>
         ],
       ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child:
-                        _ImageDisplay(imagenAsset: _imagenAsset, emoji: _emoji),
-                  ),
-                  const SizedBox(height: 24),
-                  _SlotsRow(
-                    slots: _slots,
-                    word: _currentWord,
-                    shakingSlot: _shakingSlot,
-                    hoverSlot: _hoverSlot,
-                    shakeAnimation: _shakeAnimation,
-                    shakeController: _shakeController,
-                    onLetterDropped: _onLetterDropped,
-                    onHoverChanged: (idx, hovering) =>
-                        setState(() => _hoverSlot = hovering ? idx : null),
-                  ),
-                  const SizedBox(height: 32),
-                  _AvailableLetters(available: _available),
-                ],
+        child: AbsorbPointer(
+          absorbing: _showCelebration,
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: _ImageDisplay(
+                          imagenAsset: _imagenAsset, emoji: _emoji),
+                    ),
+                    const SizedBox(height: 24),
+                    _SlotsRow(
+                      slots: _slots,
+                      word: _currentWord,
+                      shakingSlot: _shakingSlot,
+                      hoverSlot: _hoverSlot,
+                      shakeAnimation: _shakeAnimation,
+                      shakeController: _shakeController,
+                      onLetterDropped: _onLetterDropped,
+                      onHoverChanged: (idx, hovering) =>
+                          setState(() => _hoverSlot = hovering ? idx : null),
+                    ),
+                    const SizedBox(height: 32),
+                    _AvailableLetters(available: _available),
+                  ],
+                ),
               ),
-            ),
-            if (_showCelebration) _CelebrationOverlay(word: _currentWord),
-          ],
+              if (_showCelebration) _CelebrationOverlay(word: _currentWord),
+            ],
+          ),
         ),
       ),
     );

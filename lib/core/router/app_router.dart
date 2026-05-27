@@ -142,7 +142,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/games/word-scramble',
-        pageBuilder: (c, s) => _fadeSlidePage(const WordScrambleGame(), s),
+        pageBuilder: (c, s) => _fadeSlidePage(WordScrambleGame(key: UniqueKey()), s),
       ),
       GoRoute(
         path: AppConstants.routeRewards,
