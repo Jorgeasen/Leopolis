@@ -8,6 +8,7 @@ import '../../../core/audio/audio_service.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../shared/widgets/celebration_overlay.dart';
 import '../../../shared/widgets/tracing_canvas.dart';
 import '../data/letters_progress_provider.dart';
 import '../data/letters_repository.dart';
@@ -78,6 +79,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
       _message = '¡Muy bien! ⭐';
     });
     _starCtrl.forward(from: 0);
+    CelebrationOverlay.show(context);
     await AudioService.instance.playSuccess();
     await ref
         .read(lettersProgressProvider.notifier)

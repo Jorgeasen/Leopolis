@@ -9,6 +9,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
+import '../../../shared/widgets/celebration_overlay.dart';
 import '../../rewards/data/rewards_provider.dart';
 import '../data/selected_category_provider.dart';
 import '../data/word_data.dart';
@@ -111,7 +112,8 @@ class _SyllableScreenState extends ConsumerState<SyllableScreen>
       ref.read(wordsProgressProvider.notifier).addSyllableScore();
       _slideController.forward();
       AudioService.instance.playSuccess();
-      await Future.delayed(const Duration(milliseconds: 1500));
+      if (mounted) CelebrationOverlay.show(context);
+      await Future.delayed(const Duration(milliseconds: 1600));
       if (mounted) _loadNewWord();
     } else {
       setState(() => _shakingOption = syllable);

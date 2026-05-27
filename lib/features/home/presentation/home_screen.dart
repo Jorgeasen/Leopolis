@@ -124,25 +124,23 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildModuleCard(BuildContext context, _ModuleCard module) {
-    return GestureDetector(
+    return _TappableCard(
+      color: module.color,
       onTap: () => context.go(module.route),
-      child: Card(
-        color: module.color,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(module.emoji, style: const TextStyle(fontSize: 44)),
-            const SizedBox(height: 8),
-            Text(
-              module.title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(module.emoji, style: const TextStyle(fontSize: 44)),
+          const SizedBox(height: 8),
+          Text(
+            module.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -160,4 +158,63 @@ class _ModuleCard {
   final String emoji;
   final Color color;
   final String route;
+}
+
+class _TappableCard extends StatefulWidget {
+  const _TappableCard({
+    required this.color,
+    required this.onTap,
+    required this.child,
+  });
+
+  final Color color;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  State<_TappableCard> createState() => _TappableCardState();
+}
+
+class _TappableCardState extends State<_TappableCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+      reverseDuration: const Duration(milliseconds: 150),
+    );
+    _scale = Tween<double>(begin: 1.0, end: 0.93).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => _ctrl.forward(),
+      onTapUp: (_) {
+        _ctrl.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _ctrl.reverse(),
+      child: ScaleTransition(
+        scale: _scale,
+        child: Card(
+          color: widget.color,
+          child: widget.child,
+        ),
+      ),
+    );
+  }
 }
