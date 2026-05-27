@@ -61,6 +61,10 @@ class HomeScreen extends ConsumerWidget {
                     size: 32,
                     color: AppTheme.textDark,
                   ),
+                  constraints: const BoxConstraints(
+                    minWidth: 64,
+                    minHeight: 64,
+                  ),
                   onPressed: () => context.go(AppConstants.routeSettings),
                 ),
               ),
@@ -313,7 +317,7 @@ class _ModuleCardWidget extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 17,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
