@@ -57,8 +57,8 @@ void main() {
         ),
       );
 
+      // Los botones están en el padre (LetterTracingScreen), no en TracingCanvas
       expect(find.byType(TracingCanvas), findsOneWidget);
-      expect(find.text('Borrar'), findsOneWidget);
     });
   });
 }

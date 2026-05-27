@@ -141,8 +141,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    final sz =
-                        min(constraints.maxWidth, constraints.maxHeight);
+                    final sz = min(constraints.maxWidth, constraints.maxHeight);
                     return Center(
                       child: AnimatedBuilder(
                         animation: _shakeOffset,
@@ -206,8 +205,7 @@ class _LetterTracingScreenState extends ConsumerState<LetterTracingScreen>
                       child: _ActionButton(
                         label: '✓ ¡Listo!',
                         color: AppTheme.secondary,
-                        onTap: () =>
-                            _canvasKey.currentState?.evaluate(),
+                        onTap: () => _canvasKey.currentState?.evaluate(),
                       ),
                     ),
                     const SizedBox(width: 12),
