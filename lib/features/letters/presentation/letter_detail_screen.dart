@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../data/letter_data.dart';
+import '../data/letters_progress_provider.dart';
 import '../data/letters_repository.dart';
 
 class LetterDetailScreen extends ConsumerStatefulWidget {
@@ -53,6 +54,9 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final completed =
+        ref.watch(lettersProgressProvider).valueOrNull?.length ?? 0;
+
     final data = LettersRepository.getByLetter(widget.letter);
     if (data == null) {
       WidgetsBinding.instance
@@ -75,6 +79,29 @@ class _LetterDetailScreenState extends ConsumerState<LetterDetailScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.go('/letters'),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Center(
+              child: Text(
+                '$completed/27 🔤',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(6),
+          child: LinearProgressIndicator(
+            value: completed / 27.0,
+            backgroundColor: Colors.white24,
+            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            minHeight: 6,
+          ),
         ),
       ),
       body: SafeArea(
