@@ -10,6 +10,7 @@ import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../../rewards/data/rewards_provider.dart';
+import '../data/selected_category_provider.dart';
 import '../data/word_data.dart';
 import '../data/words_progress_provider.dart';
 import '../data/words_repository.dart';
@@ -50,10 +51,18 @@ class _WordMatchScreenState extends ConsumerState<WordMatchScreen>
   }
 
   void _loadNewWord() {
-    final all = WordsRepository.getAll().toList()..shuffle(Random());
-    final correct = all.first;
-    final distractors =
-        WordsRepository.getRandomDistractors(correct.palabra, 2);
+    final category = ref.read(selectedCategoryProvider);
+    final pool = (category != null
+            ? WordsRepository.getByCategory(category)
+            : WordsRepository.getAll())
+        .toList()
+      ..shuffle(Random());
+    final correct = pool.first;
+    final distractors = WordsRepository.getRandomDistractors(
+      correct.palabra,
+      2,
+      category: category,
+    );
     final options = [correct, ...distractors]..shuffle(Random());
     setState(() {
       _currentWord = correct;
