@@ -1,3 +1,5 @@
+import 'word_category.dart';
+
 class WordData {
   const WordData({
     required this.palabra,
@@ -5,6 +7,7 @@ class WordData {
     required this.silabas,
     required this.nivelDificultad,
     this.emoji = '',
+    this.category = WordCategory.objetos,
   });
 
   final String palabra;
@@ -12,6 +15,7 @@ class WordData {
   final List<String> silabas;
   final int nivelDificultad;
   final String emoji;
+  final WordCategory category;
 
   String get palabraCompleta => silabas.join();
 

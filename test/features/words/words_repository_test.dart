@@ -1,17 +1,28 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:leopolis/features/words/data/word_category.dart';
 import 'package:leopolis/features/words/data/word_data.dart';
 import 'package:leopolis/features/words/data/words_repository.dart';
 
 void main() {
   group('WordsRepository', () {
-    test('getAll returns exactly 30 words', () {
-      expect(WordsRepository.getAll().length, 30);
+    test('getAll returns 90 or more words', () {
+      expect(WordsRepository.getAll().length, greaterThanOrEqualTo(90));
     });
 
     test('getAll contains level 1 and level 2 words', () {
       final words = WordsRepository.getAll();
       expect(words.any((w) => w.nivelDificultad == 1), true);
       expect(words.any((w) => w.nivelDificultad == 2), true);
+    });
+
+    test('getByCategory returns only words of that category', () {
+      final animales =
+          WordsRepository.getByCategory(WordCategory.animales);
+      expect(animales.isNotEmpty, true);
+      expect(
+        animales.every((w) => w.category == WordCategory.animales),
+        true,
+      );
     });
 
     test('getByLevel returns only words of requested level', () {

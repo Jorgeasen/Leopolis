@@ -1,46 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leopolis/features/words/presentation/word_match_screen.dart';
+
+Widget _wrap() =>
+    const ProviderScope(child: MaterialApp(home: WordMatchScreen()));
 
 void main() {
   group('WordMatchScreen', () {
     testWidgets('muestra tres opciones de respuesta', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: WordMatchScreen()),
-      );
-
-      // 3 _OptionButton widgets (uno por opción)
+      await tester.pumpWidget(_wrap());
       expect(find.byType(GestureDetector), findsWidgets);
-      // Hay exactamente 3 botones de opción (dentro del Expanded+Padding)
-      // Verificamos que hay al menos 3 textos de opciones en la pantalla
       final containers = tester.widgetList<Container>(find.byType(Container));
       expect(containers.isNotEmpty, true);
     });
 
     testWidgets('el marcador empieza en cero', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: WordMatchScreen()),
-      );
-
+      await tester.pumpWidget(_wrap());
       expect(find.text('0 ⭐'), findsOneWidget);
     });
 
     testWidgets('tiene botón de volver', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: WordMatchScreen()),
-      );
-
+      await tester.pumpWidget(_wrap());
       expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
     });
 
     testWidgets('muestra emoji fallback cuando el asset no existe',
         (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: WordMatchScreen()),
-      );
+      await tester.pumpWidget(_wrap());
       await tester.pump();
-
-      // Cuando el asset no existe, se muestra un emoji como fallback (Text widget)
       expect(find.byType(Text), findsWidgets);
     });
   });

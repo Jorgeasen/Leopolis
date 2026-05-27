@@ -10,6 +10,7 @@ import '../../../core/database/session_tracker.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../shared/widgets/asset_image_with_fallback.dart';
 import '../../rewards/data/rewards_provider.dart';
+import '../data/selected_category_provider.dart';
 import '../data/word_data.dart';
 import '../data/words_progress_provider.dart';
 import '../data/words_repository.dart';
@@ -64,24 +65,24 @@ class _SyllableScreenState extends ConsumerState<SyllableScreen>
 
   void _loadNewWord() {
     final rng = Random();
-    final eligible = WordsRepository.getAll()
-        .where((w) => w.silabas.length >= 2)
-        .toList()
+    final category = ref.read(selectedCategoryProvider);
+    final pool = category != null
+        ? WordsRepository.getByCategory(category)
+        : WordsRepository.getAll();
+    final eligible = pool.where((w) => w.silabas.length >= 2).toList()
       ..shuffle(rng);
 
     final word = eligible.first;
     final hiddenIdx = rng.nextInt(word.silabas.length);
     final correctSyllable = word.silabas[hiddenIdx];
 
-    final distractors = WordsRepository.getAll()
-        .where((w) => w.palabra != word.palabra)
-        .expand((w) => w.silabas)
-        .where((s) => s != correctSyllable)
-        .toSet()
-        .toList()
-      ..shuffle(rng);
+    final distractors = WordsRepository.getRandomSyllableDistractors(
+      correctSyllable,
+      2,
+      category: category,
+    );
 
-    final options = [correctSyllable, ...distractors.take(2)]..shuffle(rng);
+    final options = [correctSyllable, ...distractors]..shuffle(rng);
 
     _slideController.reset();
     setState(() {
