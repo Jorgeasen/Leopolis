@@ -16,6 +16,7 @@ import '../../features/words/presentation/word_match_screen.dart';
 import '../../features/words/presentation/words_screen.dart';
 import '../../features/games/presentation/falling_letters_game.dart';
 import '../../features/games/presentation/games_screen.dart';
+import '../../features/games/presentation/memory_game.dart';
 import '../../features/games/presentation/missing_letter_game.dart';
 import '../../features/games/presentation/word_scramble_game.dart';
 import '../../features/auth/presentation/parent_dashboard_screen.dart';
@@ -126,6 +127,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppConstants.routeGames,
         pageBuilder: (c, s) => _fadeSlidePage(const GamesScreen(), s),
+      ),
+      GoRoute(
+        path: '/games/memory',
+        pageBuilder: (c, s) => _fadeSlidePage(const MemoryGame(), s),
       ),
       GoRoute(
         path: '/games/falling-letters',
