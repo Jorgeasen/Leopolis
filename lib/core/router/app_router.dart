@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,6 +24,28 @@ import '../constants/app_constants.dart';
 
 part 'app_router.g.dart';
 
+Page<void> _fadeSlidePage(Widget child, GoRouterState state) =>
+    CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: child,
+      transitionDuration: const Duration(milliseconds: 250),
+      reverseTransitionDuration: const Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved =
+            CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+        return FadeTransition(
+          opacity: curved,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.04),
+              end: Offset.zero,
+            ).animate(curved),
+            child: child,
+          ),
+        );
+      },
+    );
+
 @riverpod
 GoRouter appRouter(Ref ref) {
   final settingsAsync = ref.watch(settingsProvider);
@@ -43,73 +66,73 @@ GoRouter appRouter(Ref ref) {
     routes: [
       GoRoute(
         path: '/welcome',
-        builder: (context, state) => const WelcomeScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const WelcomeScreen(), s),
       ),
       GoRoute(
         path: AppConstants.routeHome,
-        builder: (context, state) => const HomeScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const HomeScreen(), s),
       ),
       GoRoute(
         path: AppConstants.routeLetters,
-        builder: (context, state) => const LettersScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const LettersScreen(), s),
       ),
       GoRoute(
         path: '/letters/:letter',
-        builder: (context, state) {
-          final letter = state.pathParameters['letter'] ?? 'A';
-          return LetterDetailScreen(letter: letter);
+        pageBuilder: (c, s) {
+          final letter = s.pathParameters['letter'] ?? 'A';
+          return _fadeSlidePage(LetterDetailScreen(letter: letter), s);
         },
       ),
       GoRoute(
         path: '/letters/:letter/tracing',
-        builder: (context, state) {
-          final letter = state.pathParameters['letter'] ?? 'A';
-          return LetterTracingScreen(letter: letter);
+        pageBuilder: (c, s) {
+          final letter = s.pathParameters['letter'] ?? 'A';
+          return _fadeSlidePage(LetterTracingScreen(letter: letter), s);
         },
       ),
       GoRoute(
         path: AppConstants.routeWords,
-        builder: (context, state) => const WordsScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const WordsScreen(), s),
       ),
       GoRoute(
         path: '/words/match',
-        builder: (context, state) => const WordMatchScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const WordMatchScreen(), s),
       ),
       GoRoute(
         path: '/words/syllable',
-        builder: (context, state) => const SyllableScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const SyllableScreen(), s),
       ),
       GoRoute(
         path: AppConstants.routeGames,
-        builder: (context, state) => const GamesScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const GamesScreen(), s),
       ),
       GoRoute(
         path: '/games/falling-letters',
-        builder: (context, state) => const FallingLettersGame(),
+        pageBuilder: (c, s) => _fadeSlidePage(const FallingLettersGame(), s),
       ),
       GoRoute(
         path: '/games/missing-letter',
-        builder: (context, state) => const MissingLetterGame(),
+        pageBuilder: (c, s) => _fadeSlidePage(const MissingLetterGame(), s),
       ),
       GoRoute(
         path: '/games/word-scramble',
-        builder: (context, state) => const WordScrambleGame(),
+        pageBuilder: (c, s) => _fadeSlidePage(const WordScrambleGame(), s),
       ),
       GoRoute(
         path: AppConstants.routeRewards,
-        builder: (context, state) => const RewardsScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const RewardsScreen(), s),
       ),
       GoRoute(
         path: AppConstants.routeSettings,
-        builder: (context, state) => const SettingsScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const SettingsScreen(), s),
       ),
       GoRoute(
         path: '/parent-login',
-        builder: (context, state) => const ParentLoginScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const ParentLoginScreen(), s),
       ),
       GoRoute(
         path: '/parent-dashboard',
-        builder: (context, state) => const ParentDashboardScreen(),
+        pageBuilder: (c, s) => _fadeSlidePage(const ParentDashboardScreen(), s),
       ),
     ],
   );
