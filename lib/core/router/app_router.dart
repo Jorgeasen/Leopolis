@@ -8,6 +8,7 @@ import '../../features/letters/presentation/letter_detail_screen.dart';
 import '../../features/letters/presentation/letter_tracing_screen.dart';
 import '../../features/letters/presentation/letters_screen.dart';
 import '../../features/words/presentation/first_letter_screen.dart';
+import '../../features/words/presentation/rhyme_check_screen.dart';
 import '../../features/words/presentation/syllable_count_screen.dart';
 import '../../features/words/presentation/syllable_dictation_screen.dart';
 import '../../features/words/presentation/syllable_screen.dart';
@@ -117,6 +118,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/words/syllable-count',
         pageBuilder: (c, s) => _fadeSlidePage(const SyllableCountScreen(), s),
+      ),
+      GoRoute(
+        path: '/words/rhyme-check',
+        pageBuilder: (c, s) => _fadeSlidePage(const RhymeCheckScreen(), s),
       ),
       GoRoute(
         path: AppConstants.routeGames,
