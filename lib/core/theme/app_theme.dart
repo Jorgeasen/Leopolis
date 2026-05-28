@@ -20,6 +20,7 @@ class AppTheme {
   static const Color wordsColor = Color(0xFF9C27B0); // Morado
   static const Color gamesColor = Color(0xFFFF5722); // Rojo-naranja
   static const Color rewardsColor = Color(0xFFFFD700); // Dorado
+  static const Color storiesColor = Color(0xFF009688); // Verde mar - lectura
 
   static ThemeData get lightTheme {
     final base = ThemeData(

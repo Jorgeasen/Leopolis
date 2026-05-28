@@ -12,6 +12,7 @@ class AppConstants {
   static const String routeGames = '/games';
   static const String routeRewards = '/rewards';
   static const String routeSettings = '/settings';
+  static const String routeStories = '/stories';
 
   // Assets
   static const String assetsImages = 'assets/images/';

@@ -20,6 +20,8 @@ import '../../features/games/presentation/games_screen.dart';
 import '../../features/games/presentation/memory_game.dart';
 import '../../features/games/presentation/missing_letter_game.dart';
 import '../../features/games/presentation/word_scramble_game.dart';
+import '../../features/stories/presentation/stories_screen.dart';
+import '../../features/stories/presentation/story_reader_screen.dart';
 import '../../features/auth/presentation/parent_dashboard_screen.dart';
 import '../../features/auth/presentation/parent_login_screen.dart';
 import '../../features/onboarding/presentation/welcome_screen.dart';
@@ -149,6 +151,17 @@ GoRouter appRouter(Ref ref) {
         path: '/games/word-scramble',
         pageBuilder: (c, s) =>
             _fadeSlidePage(WordScrambleGame(key: UniqueKey()), s),
+      ),
+      GoRoute(
+        path: AppConstants.routeStories,
+        pageBuilder: (c, s) => _fadeSlidePage(const StoriesScreen(), s),
+      ),
+      GoRoute(
+        path: '/stories/:id',
+        pageBuilder: (c, s) {
+          final id = s.pathParameters['id'] ?? '';
+          return _fadeSlidePage(StoryReaderScreen(storyId: id), s);
+        },
       ),
       GoRoute(
         path: AppConstants.routeRewards,
