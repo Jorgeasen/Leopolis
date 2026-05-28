@@ -269,6 +269,12 @@ class _ModuleGrid extends StatelessWidget {
                   progressLabel: totalStars > 0 ? '$totalStars ⭐' : null,
                   isNew: totalStars == 0,
                 ),
+                const _ModuleCardWidget(
+                  title: 'Cuentos',
+                  emoji: '📖',
+                  color: AppTheme.storiesColor,
+                  route: AppConstants.routeStories,
+                ),
               ],
             );
           },
