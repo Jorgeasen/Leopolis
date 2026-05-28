@@ -235,6 +235,54 @@ class _PageContent extends StatelessWidget {
   final int? highlightedWord;
   final void Function(String) onWordTap;
 
+  static String? _searchTermFromFrase(String frase) {
+    const skip = {
+      'el',
+      'la',
+      'los',
+      'las',
+      'un',
+      'una',
+      'unos',
+      'unas',
+      'a',
+      'al',
+      'de',
+      'del',
+      'en',
+      'y',
+      'se',
+      'no',
+      'su',
+      'sus',
+      'que',
+      'hay',
+      'es',
+      'son',
+      'está',
+      'están',
+      'llega',
+      'llegan',
+      'cae',
+      'nada',
+      'vive',
+      'tiene',
+      'llama',
+      've',
+      'brilla',
+      'abren',
+      'beben',
+      'vuelve',
+    };
+    final words = frase
+        .replaceAll(RegExp(r'[^\w\sáéíóúüñÁÉÍÓÚÜÑ]'), '')
+        .split(' ')
+        .map((w) => w.toLowerCase().trim())
+        .where((w) => w.length > 2 && !skip.contains(w))
+        .toList();
+    return words.isNotEmpty ? words.first : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final words = page.frase.split(' ');
@@ -255,6 +303,7 @@ class _PageContent extends StatelessWidget {
                 assetPath: page.imagenAsset,
                 fallbackEmoji: page.emoji.isEmpty ? '📖' : page.emoji,
                 emojiFontSize: 100,
+                searchTerm: _searchTermFromFrase(page.frase),
               ),
             ),
           ),

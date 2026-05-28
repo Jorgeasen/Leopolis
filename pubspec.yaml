@@ -41,6 +41,10 @@ dependencies:
   firebase_auth: ^5.1.0
   google_sign_in: ^6.2.1
 
+  # Imágenes de red
+  http: ^1.2.1
+  cached_network_image: ^3.4.1
+
   # Assets e iconos
   cupertino_icons: ^1.0.6
   flutter_svg: ^2.0.10+1
