@@ -9,6 +9,7 @@ import '../../features/letters/presentation/letter_tracing_screen.dart';
 import '../../features/letters/presentation/letters_screen.dart';
 import '../../features/words/presentation/first_letter_screen.dart';
 import '../../features/words/presentation/rhyme_check_screen.dart';
+import '../../features/words/presentation/syllable_build_screen.dart';
 import '../../features/words/presentation/syllable_count_screen.dart';
 import '../../features/words/presentation/syllable_dictation_screen.dart';
 import '../../features/words/presentation/syllable_screen.dart';
@@ -125,6 +126,10 @@ GoRouter appRouter(Ref ref) {
         pageBuilder: (c, s) => _fadeSlidePage(const RhymeCheckScreen(), s),
       ),
       GoRoute(
+        path: '/words/syllable-build',
+        pageBuilder: (c, s) => _fadeSlidePage(const SyllableBuildScreen(), s),
+      ),
+      GoRoute(
         path: AppConstants.routeGames,
         pageBuilder: (c, s) => _fadeSlidePage(const GamesScreen(), s),
       ),
@@ -142,7 +147,8 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/games/word-scramble',
-        pageBuilder: (c, s) => _fadeSlidePage(WordScrambleGame(key: UniqueKey()), s),
+        pageBuilder: (c, s) =>
+            _fadeSlidePage(WordScrambleGame(key: UniqueKey()), s),
       ),
       GoRoute(
         path: AppConstants.routeRewards,
